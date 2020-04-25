@@ -12,19 +12,12 @@ const getStocks = async(url = '') => {
 
     try {
         const newData = await response.json();
-        // hideLoadMask(container);
-        // if (newData.statusCode !== 0) {
-        //     throw `request failed with status code: ${newData.statusCode}`;
-        // }
-        // if (type === albumType.SEARCH) {
-        //     processStockPhotos(newData, isNextPage);
-        // } else {
-        //     processSavedPhotos(newData);
-        // }
-        // displayStockPhotos(type, isNextPage);
+        if (newData.statusCode !== 0) {
+            throw newData.errorMsg;
+        }
+
+        
     } catch (error) {
         console.log("There was an error processing your request: ", error);
-        //hideLoadMask(container);
-        //displayAlert(alertType.ERROR, `We are unable to process your query at this time. Please try again later.`);
     }
 }

@@ -13,24 +13,27 @@ const AVActions = {
     TimeSeriesMonthly: "TIME_SERIES_MONTHLY"
 };
 
-class AVUtils {
-    static buildURL(action, query) {
-        const base = `${baseURL}?function=${action}`;
-        let queryParams = "";
+const buildAVURL = (action) => (query) => {
+    const base = `${baseURL}?function=${action}`;
+    let queryParams = "";
     
-        switch (action) {
-            case AVActions.GlobalQuote:
-                /* Ex: https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo */
-                queryParams = `&symbol=${query}`;
-                break;
-            case AVActions.SymbolSearch: 
-                /* Ex: https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=demo */
-                queryParams = `&keywords=${query}`;
-                break;
-            default:
-                break;
-        }
-    
-        return base + queryParams + key;
+    switch (action) {
+        case AVActions.GlobalQuote:
+            /* Ex: https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=demo */
+            queryParams = `&symbol=${query}`;
+            break;
+        case AVActions.SymbolSearch: 
+            /* Ex: https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=demo */
+            queryParams = `&keywords=${query}`;
+            break;
+        default:
+            break;
     }
+    
+    return base + queryParams + key;
 }
+
+module.exports = {
+    AVActions,
+    avURL: buildAVURL
+};

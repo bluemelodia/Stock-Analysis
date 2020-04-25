@@ -62,8 +62,10 @@ const server = app.listen(port, () => {
     console.log(`running on localhost: ${port}`);
 }) 
 
-/* API URLs */
-const AVService = require('./services/av-service');
+/* Alpha Vantage URLs and utils */
+const aVService = require('./services/av-service');
+const aVActions = aVService.AVActions;
+const aVSymbolSearchURL = aVService.avURL(aVActions.SymbolSearch);
 
 /* Methods to provide input validation. */
 const validation = require('./utils/validation');
@@ -71,7 +73,7 @@ const validation = require('./utils/validation');
 /* Convenience methods for sending service responses to the client. */
 const responses = require('./utils/response');
 
-/* AVService - get list of stocks matching user-queried symbol. */
+/* AVService - GET list of stocks matching user-queried symbol. */
 app.get('/stocks/:ticker', getStocks);
 async function getStocks(req, res) {
     if (!req.params.ticker || !validation.isValidTicker(req.params.ticker)) {
@@ -80,32 +82,18 @@ async function getStocks(req, res) {
     }
 
     const ticker = req.params.ticker;
+    const stockURL = aVSymbolSearchURL(ticker);
+    console.log("💰 GET stocks -> ", stockURL);
 
-    res.send(responses.reqSuccess({}));
-
-    // const queryStr = req.params.query;
-    // let pexelURL = `${pexelBase}?query=${queryStr}&per_page=80&page=1`;
-
-    // /* Fetch the nth page of results. */
-    // if (req.params.pageNum && req.params.pageNum > 1) {
-    //     pexelURL = `${pexelBase}/?page=${req.params.pageNum}&query=${queryStr}&per_page=80`;
-    // }
-    // console.log(`GET /photos/${queryStr} from ${pexelURL}`);
-
-    // const pexelData = await fetch(pexelURL, {
-    //     headers: {
-    //         'Authorization' : pexelKey
-    //     }
-    // });
-    
-    // try {
-    //     console.log("GET Photos SUCCESS");
-    //     const pexelResponse = await pexelData.json();
-    //     res.send(responses.reqSuccess(pexelResponse));
-    // } catch (error) {
-    //     console.log("GET Photos ERROR: ", error);
-    //     res.send(responses.reqError(responses.errMsg.PROCESS_FAILED));
-    // }
+    const stockData = await fetch(stockURL);
+    try {
+        const stockDataJSON = await stockData.json();
+        console.log("💰 GET stocks SUCCESS -> ", stockDataJSON);
+        res.send(responses.reqSuccess(stockDataJSON));
+    } catch (error) {
+        console.log("💰 ERROR -> ", error);
+        res.send(responses.reqError(responses.errMsg.PROCESS_FAILED));
+    }
 }
 
 app.get('*', function(req, res) {
