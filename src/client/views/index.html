@@ -2,10 +2,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Stock Analyzer</title>
+
+     <script>        
+        document.addEventListener('DOMContentLoaded', () => {
+            Client.init();
+        });
+     </script>
 </head>
 <body>
-    Here we are
-    <button onclick="Client.hello()">Press Me</button>
+    <div id="content-container">
+        <div id="top-container">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="form-inline">
+                    <input id="search-input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button id="search-button" class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+                </div>
+            </nav>
+        </div>
+    </div>
 </body>
 </html>

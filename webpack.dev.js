@@ -5,6 +5,7 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
     mode: 'development',
+    /* Inline source maps are valuable during dev due to better performnace. */
     devtool: 'inline-source-map',
     module: {
         rules: [
