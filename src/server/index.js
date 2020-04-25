@@ -46,9 +46,13 @@ app.use(cors());
  * or trailing slashes, and uses the appropraite file separator for the platform.
  * 
  * __dirname gives the absolute path of the directory containing the currently 
- * executing file. The value will depend on which file you invoke it in. */
-app.use(express.static(path.join(__dirname, '../client/views')));
-console.log(path.join(__dirname, '../client/views'))
+ * executing file. The value will depend on which file you invoke it in. 
+ * 
+ * Here, configure the server to look for assets file in the dist folder 
+ * (as webpack will build the dist folder). */
+
+app.use(express.static('dist'));
+//app.use(express.static(path.join(__dirname, '../client/views')));
 
 /* Spins up a simple local server that will allow the app to run 
  * locally in the browser. Tell the server which port to run on.
