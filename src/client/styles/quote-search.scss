@@ -2,6 +2,7 @@
 $full-width: 100%;
 $full-height: 100%;
 $max-width: 700px;
+$card-max-width: 400px;
 
 $min-search-results-height: 48px;
 $max-search-results-height: 400px;
@@ -9,10 +10,13 @@ $search-bar-height: 48px;
 
 /* Fonts. */
 $large-font: 105%;
+$large-line-height: 28px;
+$font-weight-bold: 600;
 
 /* Margin and padding. */
-$search-small-padding: 8px;
-$search-large-padding: 15px;
+$small-margin: 10px;
+$small-padding: 8px;
+$large-padding: 15px;
 
 /* Colors. */
 $light-icon-color: #fff;
@@ -24,6 +28,7 @@ $search-overlay-color: #636e729a;
 
 /* Borders. */
 $search-focus-blue-border: 2px solid $search-accents-blue;
+$quote-card-border: 2px solid $search-bar-blue;
 
 /* Z-indexes. */
 $overlay-z-index: 9000;
@@ -41,11 +46,28 @@ $overlay-z-index: 9000;
     align-items: center;
 }
 
+@mixin flex-wrap-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@mixin flex-left-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+@mixin flex-spaced-row {
+    display: flex;
+    justify-content: space-between;
+}
+
 @mixin search-padding {
-    padding-top: $search-small-padding;
-    padding-bottom: $search-small-padding;
-    padding-left: $search-large-padding;
-    padding-right: $search-large-padding;
+    padding-top: $small-padding;
+    padding-bottom: $small-padding;
+    padding-left: $large-padding;
+    padding-right: $large-padding;
 }
 
 @mixin search-focus {
@@ -54,12 +76,24 @@ $overlay-z-index: 9000;
     border-bottom: none;
 }
 
+@mixin card {
+    margin: $small-margin;
+    border: $quote-card-border;
+    width: $full-width;
+    max-width: $card-max-width;
+}
+
+@mixin card-padding {
+    padding-top: $small-padding;
+    padding-bottom: $small-padding;
+}
+
 #search-input {
     @include search-padding();
     @include qualified-full-width();
 
     font-size: $large-font;
-    line-height: 28px;
+    line-height: $large-line-height;
     background-color: $search-input-color;
 
     &:focus, &.search-active {
@@ -142,7 +176,7 @@ $overlay-z-index: 9000;
 }
 
 .search-prompt, .no-results {
-    padding: $search-large-padding;
+    padding: $large-padding;
     font-weight: 400;
     font-size: $large-font;
 }
@@ -169,7 +203,7 @@ $overlay-z-index: 9000;
 
 .symbol {
     width: 25%;
-    font-weight: 600;
+    font-weight: $font-weight-bold;
 }
 
 .name {
@@ -180,3 +214,39 @@ $overlay-z-index: 9000;
     width: 20%;
     text-align: right;
 }
+
+.quotes {
+    @include flex-wrap-row();
+    max-height: calc(100vh - $search-bar-height);
+    overflow-y: scroll;
+}
+
+/* Quote card. */
+.quote {
+    @include card();
+    @include search-padding();
+
+    & .quote-overview {
+        @include flex-left-column();
+        @include card-padding();
+        border-bottom: $quote-card-border;
+    
+        & .type {
+            text-align: left;
+        }
+    }
+
+    & .quote-info {
+        line-height: $large-line-height;
+        padding-top: $small-padding;
+
+        & .quote-row {
+            @include flex-spaced-row();
+
+            & .field {
+                font-weight: $font-weight-bold;
+            }
+        }
+    }
+}
+

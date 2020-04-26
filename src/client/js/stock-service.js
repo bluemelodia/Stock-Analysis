@@ -1,3 +1,5 @@
+import { formatCurrency, formatNumber, formatPercent } from './number-utils';
+
 const searchPrompt = `
     <div class="search-prompt-container">
         <i class='far fa-chart-bar' style='font-size:24px'></i>
@@ -13,6 +15,11 @@ const noResults = `
 const overlay = document.querySelector('.search-overlay');
 const searchInput = document.getElementById('search-input');
 const searchResults = document.querySelector('.search-results');
+const quotes = document.querySelector('.quotes');
+
+const bookmarkedStocks = {
+    symbols: []
+};
 
 const stockOps = {
     tickerSearch: 'TICKER',
@@ -49,7 +56,7 @@ export function findMatchingStocks(query) {
     }
 }
 
-export function displayMatchingStocks(stocks) {
+function displayMatchingStocks(stocks) {
     if (stocks.length < 1) {
         setResultsContent(noResults);
     } else {
@@ -82,7 +89,6 @@ function cleanKeys(rawData) {
 
 function parseSymbol(rawQuote, stockAction) {
     let cleanedSymbol = cleanKeys(rawQuote);
-    console.log("Clean symbol", cleanedSymbol);
 
     if (stockAction === stockOps.tickerSearch) {
         let symbol = {
@@ -107,7 +113,7 @@ function parseSymbol(rawQuote, stockAction) {
     }
 }
 
-/* Get list of stocks matching the user-queries ticker. */
+/* Handle ticker and stock API calls. */
 const getStocks = async(url = '', stockAction, stock) => {
     const response = await fetch(url);
 
@@ -130,7 +136,7 @@ const getStocks = async(url = '', stockAction, stock) => {
                 stock, 
                 parseSymbol(stockData.responseData['Global Quote'], stockAction));
             delete quote.matchScore;
-            console.log("Received quote: ", quote);
+            displayQuote(quote);
         }
     } catch (error) {
         console.log("There was an error processing your request: ", error);
@@ -141,3 +147,56 @@ function fetchQuote(stock) {
     hideSearchOverlay();
     getStocks(`http://localhost:3000/quote/${stock.symbol}`, stockOps.globalQuote, stock);
 }
+
+function displayQuote(quote) {
+    console.log("Received quote: ", quote);
+    if (!bookmarkedStocks[quote.symbol]) {
+        bookmarkedStocks[quote.symbol] = quote;
+        bookmarkedStocks.symbols.push(quote.symbol);
+
+        let quoteParent = document.createElement('div');
+        quoteParent.classList.add(quote.symbol, "quote"); // for later removal
+        quoteParent.innerHTML = createQuoteTemplate(quote);
+        quotes.appendChild(quoteParent);
+    }
+    // TODO: show an alert if this was already added. 
+    // TODO: show success/failures in general. 
+}
+
+function createQuoteTemplate(quote) {
+    return `
+        <div class="quote-container">
+            <div class="quote-overview">
+                <div class="symbol">${quote.symbol}</div>
+                <div class="name">${quote.name}</div>
+            </div>
+            <div class="quote-info">
+                <div class="quote-row">
+                    <div class="field">Price</div>
+                    <div class="value">${formatCurrency(quote.price)}</div>
+                </div>
+                <div class="quote-row">
+                    <div class="field">Change</div>
+                    <div class="value">${formatCurrency(quote.change)} (${formatPercent(quote.percentChange)})</div>
+                </div>
+                <div class="quote-row">
+                    <div class="field">Open</div>
+                    <div field="value">${formatCurrency(quote.open)}</div>
+                </div>
+                <div class="quote-row">
+                    <div class="field">Previous Close</div>
+                    <div class="value">${formatCurrency(quote.previousClose)}</div>
+                </div>
+                <div class="quote-row">
+                    <div class="field">Range</div>
+                    <div class="value">${formatCurrency(quote.low)} to ${formatCurrency(quote.high)}</div>
+                </div>
+                <div class="quote-row">
+                    <div class="field">Volume</div>
+                    <div class="value">${formatNumber(quote.volume)}</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
