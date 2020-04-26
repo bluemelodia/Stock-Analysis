@@ -1,7 +1,7 @@
-import { hello } from './js/app.js';
-import { findMatchingStocks } from './js/stock-service';
+import { findMatchingStocks, displayMatchingStocks, showSearchOverlay } from './js/stock-service';
 
 import './styles/app.scss';
+import './styles/quote-search.scss';
 
 let searchButton;
 let searchInput;
@@ -19,9 +19,9 @@ function setupEventListeners() {
             findMatchingStocks(searchInput.value);
         }
     });
+    searchInput.addEventListener('click', () => showSearchOverlay());
 }
 
 export {
-    init,
-    findMatchingStocks
+    init
 };
