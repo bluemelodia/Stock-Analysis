@@ -4,6 +4,8 @@ $max-width: 700px;
 $max-height: 400px;
 $search-bar-height: 48px;
 
+$large-font: 105%;
+
 /* Margin and padding. */
 $search-small-padding: 8px;
 $search-large-padding: 15px;
@@ -12,20 +14,16 @@ $search-large-padding: 15px;
 $placeholder-color: #b2bec3;
 $search-input-color: #dfe6e9;
 $search-bar-blue: #0984e3;
+$search-overlay-color: #636e729a;
 
-$search-focus-blue-border: 1px solid #74b9ff;
+/* Borders. */
+$search-focus-blue-border: 2px solid #74b9ff;
 
-.search-box {
-    position: relative;
-    z-index: 9001;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+/* Z-indexes. */
+$overlay-z-index: 9000;
 
 #search-input {
-    font-size: 105%;
+    font-size: $large-font;
     line-height: 28px;
     width: $full-width;
     max-width: $max-width;
@@ -39,11 +37,10 @@ $search-focus-blue-border: 1px solid #74b9ff;
     background-color: $search-input-color;
 }
 
-#search-input:focus {
-    border-top: $search-focus-blue-border;
-    border-left: $search-focus-blue-border;
-    border-right: $search-focus-blue-border;
-    border-bottom: 1px solid $search-input-color;
+#search-input:focus, #search-input.search-active {
+    outline: none;
+    border: $search-focus-blue-border;
+    border-bottom: none;
 }
 
 #search-input[placeholder] {
@@ -88,33 +85,46 @@ $search-focus-blue-border: 1px solid #74b9ff;
     justify-content: center;
     width: $full-width;
     max-width: $max-width;
+    z-index: $overlay-z-index + 1;
+}
+
+.search-overlay.hidden {
+    display: none;
 }
 
 .search-overlay {
     position: absolute;
-    top: $search-bar-height;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9000;
+    z-index: $overlay-z-index;
+    background-color: $search-overlay-color;
+}
+
+.search-results.hidden {
+    display: none;
 }
 
 .search-results {
     position: fixed; 
     width: $full-width;
     max-width: $max-width;
+
     height: 40%;
     max-height: $max-height;
 
     top: $search-bar-height;
-    z-index: 9001;
+    z-index: $overlay-z-index + 1;
 
-    border-bottom: 2px solid $search-bar-blue;
+    border-left: $search-focus-blue-border;
+    border-right: $search-focus-blue-border;
+    border-bottom: $search-focus-blue-border;
     background: $search-input-color;
 }
 
 .search-prompt, .no-results {
     padding: $search-large-padding;
     font-weight: 400;
-    font-size: 105%;
+    font-size: $large-font;
 }

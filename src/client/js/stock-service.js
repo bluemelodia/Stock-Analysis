@@ -1,8 +1,15 @@
 const searchPrompt = `<div class="search-prompt">Search for symbols.</div>`;
 const noResults = `<div class="no-results">No results found.</div>`;
 
+const overlay = document.querySelector('.search-overlay');
+const searchInput = document.getElementById('search-input');
+const searchResults = document.querySelector('.search-results');
+
 export function showSearchOverlay() {
     console.log("Show the overlay");
+    searchInput.classList.add('search-active');
+    overlay.classList.remove('hidden');
+    searchResults.classList.remove('hidden');
 }
 
 export function findMatchingStocks(query) {
