@@ -1,9 +1,12 @@
 /* Heights and widths. */
 $full-width: 100%;
 $max-width: 700px;
-$max-height: 400px;
+
+$min-search-results-height: 200px;
+$max-search-results-height: 400px;
 $search-bar-height: 48px;
 
+/* Fonts. */
 $large-font: 105%;
 
 /* Margin and padding. */
@@ -14,33 +17,48 @@ $search-large-padding: 15px;
 $placeholder-color: #b2bec3;
 $search-input-color: #dfe6e9;
 $search-bar-blue: #0984e3;
+$search-accents-blue: #74b9ff;
 $search-overlay-color: #636e729a;
 
 /* Borders. */
-$search-focus-blue-border: 2px solid #74b9ff;
+$search-focus-blue-border: 2px solid $search-accents-blue;
 
 /* Z-indexes. */
 $overlay-z-index: 9000;
 
-#search-input {
-    font-size: $large-font;
-    line-height: 28px;
-    width: $full-width;
-    max-width: $max-width;
+/* Mixins. */
 
-    margin: 0;
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin search-padding {
     padding-top: $search-small-padding;
     padding-bottom: $search-small-padding;
     padding-left: $search-large-padding;
     padding-right: $search-large-padding;
-
-    background-color: $search-input-color;
 }
 
-#search-input:focus, #search-input.search-active {
+@mixin search-focus {
     outline: none;
     border: $search-focus-blue-border;
     border-bottom: none;
+}
+
+#search-input {
+    @include search-padding();
+
+    font-size: $large-font;
+    line-height: 28px;
+    width: $full-width;
+    max-width: $max-width;
+    background-color: $search-input-color;
+
+    &:focus, &.search-active {
+        @include search-focus();
+    }
 }
 
 /* Note that Firefox adds a lower opacity to the placeholder,
@@ -59,33 +77,26 @@ $overlay-z-index: 9000;
 }
 
 #search-button {
+    @include flex-center();
+
     height: $search-bar-height;
     width: $search-bar-height;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     color: white;
     background-color: $search-bar-blue;
 }
 
 .search-container {
-    display: flex;
+    @include flex-center();
     flex-direction: column;
-    align-items: center;
 }
 
 .search-bar {
-    display: flex;
-    justify-content: center;
+    @include flex-center();
+
     width: $full-width;
     max-width: $max-width;
     z-index: $overlay-z-index + 1;
-}
-
-.search-overlay.hidden {
-    display: none;
 }
 
 .search-overlay {
@@ -96,11 +107,13 @@ $overlay-z-index: 9000;
     bottom: 0;
     z-index: $overlay-z-index;
     background-color: $search-overlay-color;
+
+    &.hidden {
+        display: none;
+    }
 }
 
-.search-results.hidden {
-    display: none;
-}
+/* Search Results. */
 
 .search-results {
     position: fixed; 
@@ -108,7 +121,9 @@ $overlay-z-index: 9000;
     max-width: $max-width;
 
     height: 40%;
-    max-height: $max-height;
+    min-height: $min-search-results-height;
+    max-height: $max-search-results-height;
+    overflow-y: scroll;
 
     top: $search-bar-height;
     z-index: $overlay-z-index + 1;
@@ -117,10 +132,37 @@ $overlay-z-index: 9000;
     border-right: $search-focus-blue-border;
     border-bottom: $search-focus-blue-border;
     background: $search-input-color;
+
+    &.hidden {
+        display: none;
+    }
 }
 
 .search-prompt, .no-results {
     padding: $search-large-padding;
     font-weight: 400;
     font-size: $large-font;
+}
+
+.security {
+    @include search-padding();
+    @include flex-center();
+
+    &:hover {
+        background-color: $search-accents-blue;
+    }
+}
+
+.symbol {
+    width: 25%;
+    font-weight: 600;
+}
+
+.name {
+    flex: 1;
+}
+
+.type {
+    width: 20%;
+    text-align: right;
 }

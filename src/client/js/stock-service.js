@@ -26,11 +26,26 @@ export function findMatchingStocks(query) {
 
 export function displayMatchingStocks(stocks) {
     searchResults.innerHTML = '';
+    console.log("Stock: ", stocks);
+
+    let resultsParent = document.createElement('div');
+
     if (stocks.length < 1) {
-
+        resultsParent.innerHTML = noResults;
     } else {
-
+        stocks.forEach(stock => {
+            let stockTemplate = document.createElement('div');
+            stockTemplate.classList.add('security');
+            stockTemplate.innerHTML = `
+                <div class="symbol">${stock.symbol}</div>
+                <div class="name">${stock.name}</div>
+                <div class="type">${stock.type}</div>
+            `;
+            resultsParent.appendChild(stockTemplate);
+        })
     }
+    console.log("results: ", resultsParent);
+    searchResults.appendChild(resultsParent);
 }
 
 function cleanKeys(rawData) {
@@ -64,9 +79,11 @@ const getStocks = async(url = '') => {
         if (stockData.statusCode !== 0) {
             throw stockData.errorMsg;
         }
-
-        for (rawStock of stockData.bestMatches) {
+        console.log("Stock data: ", stockData);
+        for (let rawStock of stockData.responseData.bestMatches) {
+            console.log("Raw stock: ", rawStock);
             let stock = parseSymbol(rawStock);
+            console.log("Parsed stock: ", stock);
             stocks.push(stock);
         }
         displayMatchingStocks(stocks);
