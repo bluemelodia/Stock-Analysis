@@ -66,6 +66,7 @@ const server = app.listen(port, () => {
 const aVService = require('./services/av-service');
 const aVActions = aVService.AVActions;
 const aVSymbolSearchURL = aVService.avURL(aVActions.SymbolSearch);
+const avQuoteURL = aVService.avURL(aVActions.GlobalQuote);
 
 /* Methods to provide input validation. */
 const validation = require('./utils/validation');
@@ -74,15 +75,26 @@ const validation = require('./utils/validation');
 const responses = require('./utils/response');
 
 /* AVService - GET list of stocks matching user-queried symbol. */
-app.get('/stocks/:ticker', getStocks);
-async function getStocks(req, res) {
+app.get('/stocks/:ticker', getMatchingStocks);
+async function getMatchingStocks(req, res) {
+    getStocks(req, res, aVActions.SymbolSearch);
+}
+
+/* AVService - GET quote for user-queried symbol. */
+app.get('/quote/:ticker', getGlobalQuote);
+async function getGlobalQuote(req, res) {
+    getStocks(req, res, aVActions.GlobalQuote);
+}
+
+async function getStocks(req, res, searchType) {
     if (!req.params.ticker || !validation.isValidTicker(req.params.ticker)) {
         res.send(responses.reqError(responses.errMsg.MISSING_OR_INVALID_PARAMETERS));
         return;
     }
 
     const ticker = req.params.ticker;
-    const stockURL = aVSymbolSearchURL(ticker);
+    const stockURL = searchType === aVActions.SymbolSearch ? 
+        aVSymbolSearchURL(ticker) : avQuoteURL(ticker);
     console.log("💰 GET stocks -> ", stockURL);
 
     const stockData = await fetch(stockURL);

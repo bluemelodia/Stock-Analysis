@@ -14,6 +14,11 @@ const overlay = document.querySelector('.search-overlay');
 const searchInput = document.getElementById('search-input');
 const searchResults = document.querySelector('.search-results');
 
+const stockOps = {
+    tickerSearch: 'TICKER',
+    globalQuote: 'QUOTE'
+};
+
 export function showSearchOverlay() {
     searchInput.classList.add('search-active');
     overlay.classList.remove('hidden');
@@ -40,7 +45,7 @@ export function findMatchingStocks(query) {
     const userQuery = query;
     console.log("Query: ", userQuery);
     if (userQuery && userQuery.length > 0) {
-        getStocks(`http://localhost:3000/stocks/${userQuery}`);
+        getStocks(`http://localhost:3000/stocks/${userQuery}`, stockOps.tickerSearch);
     }
 }
 
@@ -54,6 +59,7 @@ export function displayMatchingStocks(stocks) {
         stocks.forEach(stock => {
             let stockTemplate = document.createElement('div');
             stockTemplate.classList.add('security');
+            stockTemplate.addEventListener('click', fetchQuote.bind(null, stock));
             stockTemplate.innerHTML = `
                 <div class="symbol">${stock.symbol}</div>
                 <div class="name">${stock.name}</div>
@@ -74,35 +80,64 @@ function cleanKeys(rawData) {
     return cleanData;
 }
 
-function parseSymbol(rawQuote) {
+function parseSymbol(rawQuote, stockAction) {
     let cleanedSymbol = cleanKeys(rawQuote);
-    let symbol = {
-      symbol : cleanedSymbol.symbol,
-      name : cleanedSymbol.name,
-      type : cleanedSymbol.type,
-      matchScore : cleanedSymbol.matchScore
+    console.log("Clean symbol", cleanedSymbol);
+
+    if (stockAction === stockOps.tickerSearch) {
+        let symbol = {
+            symbol : cleanedSymbol.symbol,
+            name : cleanedSymbol.name,
+            type : cleanedSymbol.type,
+            matchScore : cleanedSymbol.matchScore
+        }
+        return symbol;
+    } else {
+        let quote = {
+            change: cleanedSymbol.change,
+            percentChange: cleanedSymbol['change percent'],
+            high: cleanedSymbol.high, 
+            low: cleanedSymbol.low,
+            open: cleanedSymbol.open, 
+            previousClose: cleanedSymbol['previous close'],
+            price: cleanedSymbol.price, 
+            volume: cleanedSymbol.volume
+        }
+        return quote;
     }
-  
-    return symbol;
 }
 
 /* Get list of stocks matching the user-queries ticker. */
-const getStocks = async(url = '') => {
-    let stocks = [];
+const getStocks = async(url = '', stockAction, stock) => {
     const response = await fetch(url);
 
     try {
         const stockData = await response.json();
+        
         if (stockData.statusCode !== 0) {
             throw stockData.errorMsg;
         }
-        for (let rawStock of stockData.responseData.bestMatches) {
-            let stock = parseSymbol(rawStock);
-            stocks.push(stock);
+
+        if (stockAction === stockOps.tickerSearch) {
+            let stocks = [];
+            for (let rawStock of stockData.responseData.bestMatches) {
+                let stock = parseSymbol(rawStock, stockAction);
+                stocks.push(stock);
+            }
+            displayMatchingStocks(stocks);
+        } else {
+            let quote = Object.assign({}, 
+                stock, 
+                parseSymbol(stockData.responseData['Global Quote'], stockAction));
+            delete quote.matchScore;
+            console.log("Received quote: ", quote);
         }
-        displayMatchingStocks(stocks);
     } catch (error) {
         console.log("There was an error processing your request: ", error);
     }
 }
 
+function fetchQuote(stock) {
+    hideSearchOverlay();
+    getStocks(`http://localhost:3000/quote/${stock.symbol}`, stockOps.globalQuote, stock);
+}
