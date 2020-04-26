@@ -8,12 +8,23 @@ const searchResults = document.querySelector('.search-results');
 export function showSearchOverlay() {
     searchInput.classList.add('search-active');
     overlay.classList.remove('hidden');
-    searchResults.classList.remove('hidden');
-}
+    searchResults.classList.remove('hidden');    
+}    
 
 export function hideSearchOverlay() {
     overlay.classList.add('hidden');
     searchResults.classList.add('hidden');
+}
+
+export function wipeOldResults() {
+    setResultsContent(searchPrompt);
+}
+
+function setResultsContent(content) {
+    searchResults.innerHTML = '';
+    let resultsParent = document.createElement('div');
+    resultsParent.innerHTML = content;
+    searchResults.appendChild(resultsParent);
 }
 
 export function findMatchingStocks(query) {
@@ -25,14 +36,12 @@ export function findMatchingStocks(query) {
 }
 
 export function displayMatchingStocks(stocks) {
-    searchResults.innerHTML = '';
-    console.log("Stock: ", stocks);
-
-    let resultsParent = document.createElement('div');
-
     if (stocks.length < 1) {
-        resultsParent.innerHTML = noResults;
+        setResultsContent(noResults);
     } else {
+        searchResults.innerHTML = '';
+
+        let resultsParent = document.createElement('div');
         stocks.forEach(stock => {
             let stockTemplate = document.createElement('div');
             stockTemplate.classList.add('security');
@@ -43,9 +52,8 @@ export function displayMatchingStocks(stocks) {
             `;
             resultsParent.appendChild(stockTemplate);
         })
+        searchResults.appendChild(resultsParent);
     }
-    console.log("results: ", resultsParent);
-    searchResults.appendChild(resultsParent);
 }
 
 function cleanKeys(rawData) {
@@ -79,11 +87,8 @@ const getStocks = async(url = '') => {
         if (stockData.statusCode !== 0) {
             throw stockData.errorMsg;
         }
-        console.log("Stock data: ", stockData);
         for (let rawStock of stockData.responseData.bestMatches) {
-            console.log("Raw stock: ", rawStock);
             let stock = parseSymbol(rawStock);
-            console.log("Parsed stock: ", stock);
             stocks.push(stock);
         }
         displayMatchingStocks(stocks);

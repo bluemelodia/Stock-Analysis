@@ -1,5 +1,9 @@
-import { findMatchingStocks, hideSearchOverlay, setupOverlay, showSearchOverlay } from './js/stock-service';
-
+import { 
+    findMatchingStocks, 
+    hideSearchOverlay, 
+    showSearchOverlay,
+    wipeOldResults 
+} from './js/stock-service';
 import './styles/app.scss';
 import './styles/quote-search.scss';
 
@@ -22,7 +26,12 @@ function setupEventListeners() {
             findMatchingStocks(searchInput.value);
         }
     });
-    searchInput.addEventListener('click', () => showSearchOverlay());
+    searchInput.addEventListener('click', () => {
+        showSearchOverlay();
+        if (searchInput.value.length < 1) {
+            wipeOldResults();
+        }
+    });
     overlay.addEventListener('click', () => hideSearchOverlay());
 }
 
