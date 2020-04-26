@@ -91,6 +91,14 @@ $overlay-z-index: 9000;
     padding-bottom: $small-padding;
 }
 
+/* Cross-browser support for calculated max-height. */
+@mixin max-quote-height {
+    $max-height: calc(100vh - $search-bar-height);
+    max-height: -webkit-calc($max-height);
+    max-height: -moz-calc($max-height);
+    max-height: $max-height;
+}
+
 #search-input {
     @include search-padding();
     @include qualified-full-width();
@@ -202,25 +210,25 @@ $overlay-z-index: 9000;
     &:hover {
         background-color: $search-accents-blue;
     }
-}
 
-.symbol {
-    width: 25%;
-    font-weight: $font-weight-bold;
-}
-
-.name {
-    flex: 1;
-}
-
-.type {
-    width: 20%;
-    text-align: right;
+    & .symbol {
+        width: 25%;
+        font-weight: $font-weight-bold;
+    }
+    
+    & .name {
+        flex: 1;
+    }
+    
+    & .type {
+        width: 20%;
+        text-align: right;
+    }
 }
 
 .quotes {
     @include flex-wrap-row();
-    max-height: calc(100vh - $search-bar-height);
+    @include max-quote-height();
     overflow-y: scroll;
 }
 

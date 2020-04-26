@@ -109,6 +109,7 @@ function displayQuote(quote) {
         quoteParent.innerHTML = createQuoteTemplate(quote);
         quotes.appendChild(quoteParent);
     }
+
     // TODO: show an alert if this was already added. 
     // TODO: show success/failures in general. 
     // TODO: due to API limits, need to refresh sparingly - show last refreshed.
