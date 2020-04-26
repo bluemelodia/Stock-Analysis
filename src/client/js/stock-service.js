@@ -1,16 +1,6 @@
-import { formatCurrency, formatNumber, formatPercent } from './number-utils';
-
-const searchPrompt = `
-    <div class="search-prompt-container">
-        <i class='far fa-chart-bar' style='font-size:24px'></i>
-        <div class="search-prompt">Search for symbols.</div>
-    </div>`;
-const noResults = `
-    <div class="no-results-container">
-        <i class="fa fa-info-circle" style="font-size:24px"></i>
-        <div class="no-results">No results found.</div>
-    </div>
-`;
+import { parseSymbol, stockOps } from './stock-utils';
+import { cssClassForNum, formatCurrency, formatNumber, formatPercent } from './number-utils';
+import { noResults, searchPrompt } from './templates';
 
 const overlay = document.querySelector('.search-overlay');
 const searchInput = document.getElementById('search-input');
@@ -19,11 +9,6 @@ const quotes = document.querySelector('.quotes');
 
 const bookmarkedStocks = {
     symbols: []
-};
-
-const stockOps = {
-    tickerSearch: 'TICKER',
-    globalQuote: 'QUOTE'
 };
 
 export function showSearchOverlay() {
@@ -78,41 +63,6 @@ function displayMatchingStocks(stocks) {
     }
 }
 
-function cleanKeys(rawData) {
-    let cleanData = {};
-    for (let [key, value] of Object.entries(rawData)) {
-      key = key.split(". ")[1];
-      cleanData[key] = value;
-    }
-    return cleanData;
-}
-
-function parseSymbol(rawQuote, stockAction) {
-    let cleanedSymbol = cleanKeys(rawQuote);
-
-    if (stockAction === stockOps.tickerSearch) {
-        let symbol = {
-            symbol : cleanedSymbol.symbol,
-            name : cleanedSymbol.name,
-            type : cleanedSymbol.type,
-            matchScore : cleanedSymbol.matchScore
-        }
-        return symbol;
-    } else {
-        let quote = {
-            change: cleanedSymbol.change,
-            percentChange: cleanedSymbol['change percent'],
-            high: cleanedSymbol.high, 
-            low: cleanedSymbol.low,
-            open: cleanedSymbol.open, 
-            previousClose: cleanedSymbol['previous close'],
-            price: cleanedSymbol.price, 
-            volume: cleanedSymbol.volume
-        }
-        return quote;
-    }
-}
-
 /* Handle ticker and stock API calls. */
 const getStocks = async(url = '', stockAction, stock) => {
     const response = await fetch(url);
@@ -161,6 +111,8 @@ function displayQuote(quote) {
     }
     // TODO: show an alert if this was already added. 
     // TODO: show success/failures in general. 
+    // TODO: due to API limits, need to refresh sparingly - show last refreshed.
+    // TODO: show an error message if API limit is hit. 
 }
 
 function createQuoteTemplate(quote) {
@@ -177,7 +129,14 @@ function createQuoteTemplate(quote) {
                 </div>
                 <div class="quote-row">
                     <div class="field">Change</div>
-                    <div class="value">${formatCurrency(quote.change)} (${formatPercent(quote.percentChange)})</div>
+                    <div class="value">
+                        <span class="${cssClassForNum(quote.change)}">
+                            ${formatCurrency(quote.change)} 
+                        </span>
+                        <span class="${cssClassForNum(quote.percentChange)}">
+                            (${formatPercent(quote.percentChange)})
+                        </span>
+                    </div>
                 </div>
                 <div class="quote-row">
                     <div class="field">Open</div>
@@ -199,4 +158,3 @@ function createQuoteTemplate(quote) {
         </div>
     `;
 }
-

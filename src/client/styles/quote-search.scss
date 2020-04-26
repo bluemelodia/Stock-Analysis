@@ -26,6 +26,9 @@ $search-bar-blue: #0984e3;
 $search-accents-blue: #74b9ff;
 $search-overlay-color: #636e729a;
 
+$positive-num: #00b894;
+$negative-num: #d63031;
+
 /* Borders. */
 $search-focus-blue-border: 2px solid $search-accents-blue;
 $quote-card-border: 2px solid $search-bar-blue;
@@ -245,6 +248,16 @@ $overlay-z-index: 9000;
 
             & .field {
                 font-weight: $font-weight-bold;
+            }
+
+            & .value {
+                & .positive {
+                    color: $positive-num;
+                }
+
+                & .negative {
+                    color: $negative-num;
+                }
             }
         }
     }

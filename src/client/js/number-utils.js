@@ -15,3 +15,9 @@ export function formatCurrency(num) {
 export function formatPercent(num) {
     return percentFormatter.format(num.replace('%', ''));
 }
+
+export function cssClassForNum(num) {
+    const sign = Math.sign(parseFloat(num.replace('%', '')));
+    console.log("SIGN: ", num, sign);
+    return sign > 0 ? 'positive' : sign < 0 ? 'negative' : '';
+}
