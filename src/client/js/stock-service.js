@@ -6,10 +6,14 @@ const searchInput = document.getElementById('search-input');
 const searchResults = document.querySelector('.search-results');
 
 export function showSearchOverlay() {
-    console.log("Show the overlay");
     searchInput.classList.add('search-active');
     overlay.classList.remove('hidden');
     searchResults.classList.remove('hidden');
+}
+
+export function hideSearchOverlay() {
+    overlay.classList.add('hidden');
+    searchResults.classList.add('hidden');
 }
 
 export function findMatchingStocks(query) {
@@ -21,7 +25,12 @@ export function findMatchingStocks(query) {
 }
 
 export function displayMatchingStocks(stocks) {
-    
+    searchResults.innerHTML = '';
+    if (stocks.length < 1) {
+
+    } else {
+
+    }
 }
 
 function cleanKeys(rawData) {

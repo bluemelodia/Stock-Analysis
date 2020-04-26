@@ -43,10 +43,6 @@ $overlay-z-index: 9000;
     border-bottom: none;
 }
 
-#search-input[placeholder] {
-    font-size: 22px;
-}
-
 /* Note that Firefox adds a lower opacity to the placeholder,
  * so we use opacity: 1 to fix this. */
 ::placeholder {
