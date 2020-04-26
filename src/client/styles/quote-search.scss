@@ -1,8 +1,9 @@
 /* Heights and widths. */
 $full-width: 100%;
+$full-height: 100%;
 $max-width: 700px;
 
-$min-search-results-height: 200px;
+$min-search-results-height: 48px;
 $max-search-results-height: 400px;
 $search-bar-height: 48px;
 
@@ -119,9 +120,7 @@ $overlay-z-index: 9000;
     position: fixed; 
     width: $full-width;
     max-width: $max-width;
-
     height: 40%;
-    min-height: $min-search-results-height;
     max-height: $max-search-results-height;
     overflow-y: scroll;
 
@@ -142,6 +141,17 @@ $overlay-z-index: 9000;
     padding: $search-large-padding;
     font-weight: 400;
     font-size: $large-font;
+}
+
+.search-prompt-container, .no-results-container {
+    @include search-padding();
+    @include flex-center();
+
+    height: $full-height;
+
+    & .fa, & .far {
+        color: $search-bar-blue;
+    }
 }
 
 .security {
