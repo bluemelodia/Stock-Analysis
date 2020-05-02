@@ -1,7 +1,7 @@
 @import './app.scss';
 
-$alert-message-background: #2d3436;
-$alert-message-border: 2px solid #636e72;
+$alert-message-background: $main-blue;
+$alert-message-border: 2px solid $accents-blue;
 
 .alert {
     @include absolute-overlay(
@@ -10,10 +10,6 @@ $alert-message-border: 2px solid #636e72;
     );
 
     @include flex-center();
-
-    &.hidden {
-        display: none;
-    }
 
     & .alert-message {
         background: $alert-message-background;

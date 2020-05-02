@@ -38,11 +38,18 @@ function setupEventListeners() {
         }
     });
     overlay.addEventListener('click', () => hideSearchOverlay());
+    alert.addEventListener('click', () => dismissAlert());
+    alertMessage.addEventListener('click', () => dismissAlert());
 }
 
 function showAlert(message) {
     alertMessage.innerHTML = message;
     alert.classList.remove('hidden');
+}
+
+function dismissAlert() {
+    alertMessage.innerHTML = '';
+    alert.classList.add('hidden');
 }
 
 export {

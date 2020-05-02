@@ -18,8 +18,8 @@ $font-weight-bold: 600;
 /* Colors. */
 $placeholder-color: #b2bec3;
 $search-input-color: #dfe6e9;
-$search-bar-blue: #0984e3;
-$search-accents-blue: #74b9ff;
+$search-bar-blue: $main-blue;
+$search-accents-blue: $accents-blue;
 
 $positive-num: #00b894;
 $negative-num: #d63031;
@@ -137,10 +137,6 @@ $quote-card-border: 2px solid $search-bar-blue;
 
 .search-overlay {
     @include absolute-overlay($dark-overlay-color);
-
-    &.hidden {
-        display: none;
-    }
 }
 
 /* Search Results. */

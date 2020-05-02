@@ -14,10 +14,19 @@ const searchInput = document.getElementById('search-input');
 const searchResults = document.querySelector('.search-results');
 const quotes = document.querySelector('.quotes');
 
-const fetchLimit = 10000; //5 * 60 * 1000;
+let timeOfLastRequest;
+
+/* This is added because of Alpha Vantage API limits. */
+const requestLimit = 5000;
+
+/* This is intentionally kept long because users should not be trying to get
+ * updated information on securities too often. */
+const fetchLimit = 15 * 60 * 1000;
 
 const errorMessages = {
-    TOO_MANY_REQUESTS: 'You are making too many refresh requests for this security. Please wait a few minutes then try again.'
+    FAILED_REQUEST: 'We were unable to complete your request. Please try again.',
+    TOO_MANY_REQUESTS: 'You are making too many requests in a short period of time. Please wait a few seconds then try again.',
+    TOO_MANY_REFRESHES: 'You are making too many refresh requests for this security. Please wait a few minutes then try again.'
 }
 
 const bookmarkedStocks = {
@@ -78,6 +87,14 @@ function displayMatchingStocks(stocks) {
 
 /* Handle ticker and stock API calls. */
 const getStocks = async(url = '', stockAction, stock) => {
+    const currentTime = Date.parse(currentDayAndTime());
+
+    if (timeOfLastRequest && currentTime - Date.parse(timeOfLastRequest) < requestLimit) {
+        showAlert(errorMessages.TOO_MANY_REQUESTS);
+        return;
+    }
+
+    timeOfLastRequest = currentDayAndTime();
     const response = await fetch(url);
 
     try {
@@ -103,6 +120,7 @@ const getStocks = async(url = '', stockAction, stock) => {
         }
     } catch (error) {
         console.log("There was an error processing your request: ", error);
+        showAlert(errorMessages.FAILED_REQUEST);
     }
 }
 
@@ -110,7 +128,7 @@ function fetchDelayedQuote(lastRefresh, stock) {
     const currentTime = Date.parse(currentDayAndTime());
     const lastRefreshTime = Date.parse(lastRefresh);
     if (currentTime - lastRefreshTime < fetchLimit) {
-        showAlert(errorMessages.TOO_MANY_REQUESTS);
+        showAlert(errorMessages.TOO_MANY_REFRESHES);
         return;
     }
 
@@ -151,10 +169,6 @@ function displayQuote(quote) {
     }
 
     bookmarkedStocks[quote.symbol] = quote;
-
-    // TODO: show an alert if this was already added. 
-    // TODO: show success/failures in general. 
-    // TODO: show an error message if API limit is hit. 
 }
 
 function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler) {
