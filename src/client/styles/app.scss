@@ -4,3 +4,13 @@
     margin: 0;
     padding: 0;
 }
+
+$breakpoint-small-device: 500px;
+
+@mixin for-size($size) {
+    @if $size == small {
+        @media (max-width: $breakpoint-small-device) {
+            @content;
+        }
+    }
+}

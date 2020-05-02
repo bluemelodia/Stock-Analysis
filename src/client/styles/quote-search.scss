@@ -1,3 +1,5 @@
+@import './app.scss';
+
 /* Heights and widths. */
 $full-width: 100%;
 $full-height: 100%;
@@ -206,6 +208,10 @@ $overlay-z-index: 9000;
     @include search-padding();
     @include flex-center();
 
+    @include for-size(small) {
+        flex-direction: column;
+    }
+
     &:hover {
         background-color: $search-accents-blue;
     }
@@ -213,6 +219,11 @@ $overlay-z-index: 9000;
     & .symbol {
         width: 25%;
         font-weight: $font-weight-bold;
+        
+        /* for block-level elements, auto would return the width to 100% */
+        @include for-size(small) {
+            width: auto;
+        }
     }
     
     & .name {
@@ -222,6 +233,10 @@ $overlay-z-index: 9000;
     & .type {
         width: 20%;
         text-align: right;
+
+        @include for-size(small) {
+            width: auto;
+        }
     }
 }
 
