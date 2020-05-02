@@ -120,8 +120,12 @@ function fetchQuote(stock) {
 
 function displayQuote(quote) {
     console.log("Received quote: ", quote);
+
+    const lastRefreshedDate = currentDayAndTime();
+    console.log("Last refreshed date: ", lastRefreshedDate);
+    const refreshHandler = fetchDelayedQuote.bind(this, lastRefreshedDate, quote);
+
     if (!bookmarkedStocks[quote.symbol]) {
-        bookmarkedStocks[quote.symbol] = quote;
         bookmarkedStocks.symbols.push(quote.symbol);
 
         /* Create the parent containers. */
@@ -130,39 +134,45 @@ function displayQuote(quote) {
 
         let quoteContainer = document.createElement('div');
         quoteContainer.classList.add("quote-container");
-    
-        const lastRefreshedDate = currentDayAndTime();
-        const refreshClicked = fetchDelayedQuote.bind(this, lastRefreshedDate, quote);
-
-        let quoteHeader = createQuoteHeader(quote);
-        let quoteBody = createQuoteBody(quote);
-
-        /* Create the footer and add event listeners to it. */
-        let quoteFooter = document.createElement('div');
-        quoteFooter.classList.add("quote-footer");
-
-        let lastRefreshed = document.createElement('span');
-        lastRefreshed.classList.add("last-refreshed");
-        lastRefreshed.innerHTML = `Last Refreshed: ${lastRefreshedDate}`;
-
-        let refreshButton = document.createElement('button');
-        refreshButton.classList.add("refresh-button");
-        refreshButton.innerHTML = quoteIcon;
-        refreshButton.addEventListener('click', refreshClicked);
-
-        quoteFooter.appendChild(lastRefreshed);
-        quoteFooter.appendChild(refreshButton);
-
-        quoteContainer.innerHTML = quoteHeader + quoteBody;
-        quoteContainer.appendChild(quoteFooter);
+ 
+        updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
+  
         quoteParent.appendChild(quoteContainer);
         quotes.appendChild(quoteParent);
+    } else {
+        /* Update the current entry. */
+        const quoteCard = document.querySelector(`.${quote.symbol}.quote`);
+        let quoteContainer = quoteCard.querySelector('.quote-container');
+        updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
     }
+
+    bookmarkedStocks[quote.symbol] = quote;
 
     // TODO: show an alert if this was already added. 
     // TODO: show success/failures in general. 
     // TODO: show an error message if API limit is hit. 
 }
 
+function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler) {
+        let quoteHeader = createQuoteHeader(quote);
+        let quoteBody = createQuoteBody(quote);
 
-
+       /* Create the footer and add event listeners to it. */
+       let quoteFooter = document.createElement('div');
+       quoteFooter.classList.add("quote-footer");
+  
+       let lastRefreshed = document.createElement('span');
+       lastRefreshed.classList.add("last-refreshed");
+       lastRefreshed.innerHTML = `Last Refreshed: ${lastRefreshedDate}`;
+  
+       let refreshButton = document.createElement('button');
+       refreshButton.classList.add("refresh-button");
+       refreshButton.innerHTML = quoteIcon;
+       refreshButton.addEventListener('click', refreshHandler);
+  
+       quoteFooter.appendChild(lastRefreshed);
+       quoteFooter.appendChild(refreshButton);
+  
+       quoteContainer.innerHTML = quoteHeader + quoteBody;
+       quoteContainer.appendChild(quoteFooter);
+}
