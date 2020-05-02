@@ -12,29 +12,31 @@ function cleanKeys(rawData) {
     return cleanData;
 }
 
-export function parseSymbol(rawQuote, stockAction) {
-    let cleanedSymbol = cleanKeys(rawQuote);
+export function parseSymbol(rawQuote, stockAction, symbolData) {
+    let cleanedData = cleanKeys(rawQuote);
+    let cleanedSymbol = stockAction === stockOps.tickerSearch ? cleanedData : symbolData;
+    let symbol = {
+        symbol : cleanedSymbol.symbol,
+        name : cleanedSymbol.name,
+        type : cleanedSymbol.type,
+        currency: cleanedSymbol.currency,
+        matchScore : cleanedSymbol.matchScore
+    };
 
     if (stockAction === stockOps.tickerSearch) {
-        let symbol = {
-            symbol : cleanedSymbol.symbol,
-            name : cleanedSymbol.name,
-            type : cleanedSymbol.type,
-            currency: cleanedSymbol.currency,
-            matchScore : cleanedSymbol.matchScore
-        }
         return symbol;
     } else {
         let quote = {
-            change: cleanedSymbol.change,
-            percentChange: cleanedSymbol['change percent'],
-            high: cleanedSymbol.high, 
-            low: cleanedSymbol.low,
-            open: cleanedSymbol.open, 
-            previousClose: cleanedSymbol['previous close'],
-            price: cleanedSymbol.price, 
-            volume: cleanedSymbol.volume
+            change: cleanedData.change,
+            percentChange: cleanedData['change percent'],
+            high: cleanedData.high, 
+            low: cleanedData.low,
+            open: cleanedData.open, 
+            previousClose: cleanedData['previous close'],
+            price: cleanedData.price, 
+            volume: cleanedData.volume
         }
+        quote = Object.assign({}, quote, symbol);
         return quote;
     }
 }

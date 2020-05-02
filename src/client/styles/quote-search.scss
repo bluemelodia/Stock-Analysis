@@ -197,7 +197,7 @@ $overlay-z-index: 9000;
 
     height: $full-height;
 
-    & .fa, & .far {
+    & i {
         color: $search-bar-blue;
     }
 }
@@ -272,7 +272,19 @@ $overlay-z-index: 9000;
     }
 
     & .quote-footer {
-        @include card-padding();
+        @include flex-spaced-row();
+
+        padding-top: $small-padding * 2;
+        padding-bottom: $small-padding;
+
+        & .refresh-button {
+            border: none;
+            background: $light-icon-color;
+        }
+
+        & i {
+            color: $search-bar-blue;
+        }
     }
 }
 

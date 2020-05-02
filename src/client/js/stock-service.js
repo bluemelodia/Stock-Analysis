@@ -1,17 +1,19 @@
 import { parseSymbol, stockOps } from './stock-utils';
+import { currentDayAndTime } from './number-utils';
 import { 
-        cssClassForNum, 
-        currentDayAndTime, 
-        formatCurrency, 
-        formatNumber, 
-        formatPercent 
-} from './number-utils';
-import { noResults, searchPrompt } from './templates';
+    createQuoteBody, 
+    createQuoteHeader, 
+    noResults, 
+    quoteIcon,
+    searchPrompt 
+} from './templates';
 
 const overlay = document.querySelector('.search-overlay');
 const searchInput = document.getElementById('search-input');
 const searchResults = document.querySelector('.search-results');
 const quotes = document.querySelector('.quotes');
+
+const fetchLimit = 10000; //5 * 60 * 1000;
 
 const bookmarkedStocks = {
     symbols: []
@@ -88,15 +90,27 @@ const getStocks = async(url = '', stockAction, stock) => {
             }
             displayMatchingStocks(stocks);
         } else {
-            let quote = Object.assign({}, 
-                stock, 
-                parseSymbol(stockData.responseData['Global Quote'], stockAction));
-            delete quote.matchScore;
+            let quote = parseSymbol(
+                stockData.responseData['Global Quote'], 
+                stockAction,
+                stock);
             displayQuote(quote);
         }
     } catch (error) {
         console.log("There was an error processing your request: ", error);
     }
+}
+
+function fetchDelayedQuote(lastRefresh, stock) {
+    const currentTime = Date.parse(currentDayAndTime());
+    const lastRefreshTime = Date.parse(lastRefresh);
+    if (currentTime - lastRefreshTime < fetchLimit) {
+        console.log("TOO SOON");
+        // TODO: refreshing too soon
+        return;
+    }
+
+    fetchQuote(stock);
 }
 
 function fetchQuote(stock) {
@@ -110,61 +124,45 @@ function displayQuote(quote) {
         bookmarkedStocks[quote.symbol] = quote;
         bookmarkedStocks.symbols.push(quote.symbol);
 
+        /* Create the parent containers. */
         let quoteParent = document.createElement('div');
         quoteParent.classList.add(quote.symbol, "quote"); // for later removal
-        quoteParent.innerHTML = createQuoteTemplate(quote);
+
+        let quoteContainer = document.createElement('div');
+        quoteContainer.classList.add("quote-container");
+    
+        const lastRefreshedDate = currentDayAndTime();
+        const refreshClicked = fetchDelayedQuote.bind(this, lastRefreshedDate, quote);
+
+        let quoteHeader = createQuoteHeader(quote);
+        let quoteBody = createQuoteBody(quote);
+
+        /* Create the footer and add event listeners to it. */
+        let quoteFooter = document.createElement('div');
+        quoteFooter.classList.add("quote-footer");
+
+        let lastRefreshed = document.createElement('span');
+        lastRefreshed.classList.add("last-refreshed");
+        lastRefreshed.innerHTML = `Last Refreshed: ${lastRefreshedDate}`;
+
+        let refreshButton = document.createElement('button');
+        refreshButton.classList.add("refresh-button");
+        refreshButton.innerHTML = quoteIcon;
+        refreshButton.addEventListener('click', refreshClicked);
+
+        quoteFooter.appendChild(lastRefreshed);
+        quoteFooter.appendChild(refreshButton);
+
+        quoteContainer.innerHTML = quoteHeader + quoteBody;
+        quoteContainer.appendChild(quoteFooter);
+        quoteParent.appendChild(quoteContainer);
         quotes.appendChild(quoteParent);
     }
 
     // TODO: show an alert if this was already added. 
     // TODO: show success/failures in general. 
-    // TODO: due to API limits, need to refresh sparingly - show last refreshed.
     // TODO: show an error message if API limit is hit. 
 }
 
-function createQuoteTemplate(quote) {
-    return `
-        <div class="quote-container">
-            <div class="quote-overview">
-                <div class="symbol">${quote.symbol}</div>
-                <div class="name">${quote.name}</div>
-            </div>
-            <div class="quote-info">
-                <div class="quote-row">
-                    <div class="field">Price</div>
-                    <div class="value">${formatCurrency(quote.price, quote.currency)}</div>
-                </div>
-                <div class="quote-row">
-                    <div class="field">Change</div>
-                    <div class="value">
-                        <span class="${cssClassForNum(quote.change)}">
-                            ${formatCurrency(quote.change, quote.currency)} 
-                        </span>
-                        <span class="${cssClassForNum(quote.percentChange)}">
-                            (${formatPercent(quote.percentChange)})
-                        </span>
-                    </div>
-                </div>
-                <div class="quote-row">
-                    <div class="field">Open</div>
-                    <div field="value">${formatCurrency(quote.open)}</div>
-                </div>
-                <div class="quote-row">
-                    <div class="field">Previous Close</div>
-                    <div class="value">${formatCurrency(quote.previousClose)}</div>
-                </div>
-                <div class="quote-row">
-                    <div class="field">Range</div>
-                    <div class="value">${formatCurrency(quote.low)} to ${formatCurrency(quote.high)}</div>
-                </div>
-                <div class="quote-row">
-                    <div class="field">Volume</div>
-                    <div class="value">${formatNumber(quote.volume)}</div>
-                </div>
-            </div>
-            <div class="quote-footer">
-                <div class="last-refreshed">Last Refreshed: ${currentDayAndTime()}</div>
-            </div>
-        </div>
-    `;
-}
+
+
