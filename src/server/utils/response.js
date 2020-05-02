@@ -5,7 +5,8 @@ const statusCodes = {
 
 const errorMessages = {
     INVALID_REQUEST: 'There was a problem with your request.',
-    MISSING_OR_INVALID_PARAMETERS: 'User made an invalid query.',
+    MISSING_OR_INVALID_PARAMETERS: 'There was a problem with your request.',
+    LIMIT_EXCEEDED: 'You have made too many requests recently. Please try again later.',
     INVALID_CREDENTIALS: 'User entered invalid credentials.',
     REGISTRATION_FAILED: 'Failed to create user.',
     LOGIN_FAILED: 'Failed to authenticate user.',

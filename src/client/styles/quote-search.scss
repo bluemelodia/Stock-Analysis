@@ -169,7 +169,6 @@ $overlay-z-index: 9000;
     @include qualified-full-width();
 
     position: fixed; 
-    height: 40%;
     max-height: $max-search-results-height;
     overflow-y: scroll;
 
@@ -248,8 +247,10 @@ $overlay-z-index: 9000;
     }
 
     & .quote-info {
+        @include card-padding();
+
         line-height: $large-line-height;
-        padding-top: $small-padding;
+        border-bottom: $quote-card-border;
 
         & .quote-row {
             @include flex-spaced-row();
@@ -268,6 +269,10 @@ $overlay-z-index: 9000;
                 }
             }
         }
+    }
+
+    & .quote-footer {
+        @include card-padding();
     }
 }
 

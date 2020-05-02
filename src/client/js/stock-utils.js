@@ -20,6 +20,7 @@ export function parseSymbol(rawQuote, stockAction) {
             symbol : cleanedSymbol.symbol,
             name : cleanedSymbol.name,
             type : cleanedSymbol.type,
+            currency: cleanedSymbol.currency,
             matchScore : cleanedSymbol.matchScore
         }
         return symbol;

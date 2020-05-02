@@ -101,7 +101,14 @@ async function getStocks(req, res, searchType) {
     try {
         const stockDataJSON = await stockData.json();
         console.log("💰 GET stocks SUCCESS -> ", stockDataJSON);
-        res.send(responses.reqSuccess(stockDataJSON));
+
+        if (stockDataJSON['Error Message']) {
+            res.send(responses.reqError(responses.errMsg.INVALID_REQUEST));
+        } else if (stockDataJSON['Note']) {
+            res.send(responses.reqError(responses.errMsg.LIMIT_EXCEEDED));
+        } else {
+            res.send(responses.reqSuccess(stockDataJSON));
+        }
     } catch (error) {
         console.log("💰 ERROR -> ", error);
         res.send(responses.reqError(responses.errMsg.PROCESS_FAILED));

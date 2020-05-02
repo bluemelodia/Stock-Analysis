@@ -1,6 +1,3 @@
-const currencyOptions = { style: 'currency', currency: 'USD' };
-const currencyFormatter = new Intl.NumberFormat('en-US', currencyOptions);
-
 const percentOptions = { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2};
 const percentFormatter = new Intl.NumberFormat('en-US', percentOptions);
 
@@ -8,8 +5,8 @@ export function formatNumber(num) {
     return parseInt(num).toLocaleString();
 }
 
-export function formatCurrency(num) {
-    return `${currencyFormatter.format(num)}`;
+export function formatCurrency(num, currency = 'USD') {
+    return new Intl.NumberFormat({ style: 'currency', currency: currency }).format(num);
 }
 
 export function formatPercent(num) {
@@ -18,6 +15,10 @@ export function formatPercent(num) {
 
 export function cssClassForNum(num) {
     const sign = Math.sign(parseFloat(num.replace('%', '')));
-    console.log("SIGN: ", num, sign);
     return sign > 0 ? 'positive' : sign < 0 ? 'negative' : '';
+}
+
+export function currentDayAndTime() {
+    var day = new Date();
+    return day.toLocaleString();
 }

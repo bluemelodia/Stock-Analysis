@@ -1,5 +1,11 @@
 import { parseSymbol, stockOps } from './stock-utils';
-import { cssClassForNum, formatCurrency, formatNumber, formatPercent } from './number-utils';
+import { 
+        cssClassForNum, 
+        currentDayAndTime, 
+        formatCurrency, 
+        formatNumber, 
+        formatPercent 
+} from './number-utils';
 import { noResults, searchPrompt } from './templates';
 
 const overlay = document.querySelector('.search-overlay');
@@ -126,13 +132,13 @@ function createQuoteTemplate(quote) {
             <div class="quote-info">
                 <div class="quote-row">
                     <div class="field">Price</div>
-                    <div class="value">${formatCurrency(quote.price)}</div>
+                    <div class="value">${formatCurrency(quote.price, quote.currency)}</div>
                 </div>
                 <div class="quote-row">
                     <div class="field">Change</div>
                     <div class="value">
                         <span class="${cssClassForNum(quote.change)}">
-                            ${formatCurrency(quote.change)} 
+                            ${formatCurrency(quote.change, quote.currency)} 
                         </span>
                         <span class="${cssClassForNum(quote.percentChange)}">
                             (${formatPercent(quote.percentChange)})
@@ -155,6 +161,9 @@ function createQuoteTemplate(quote) {
                     <div class="field">Volume</div>
                     <div class="value">${formatNumber(quote.volume)}</div>
                 </div>
+            </div>
+            <div class="quote-footer">
+                <div class="last-refreshed">Last Refreshed: ${currentDayAndTime()}</div>
             </div>
         </div>
     `;
