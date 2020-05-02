@@ -7,6 +7,7 @@ import {
     quoteIcon,
     searchPrompt 
 } from './templates';
+import { showAlert } from '../index'
 
 const overlay = document.querySelector('.search-overlay');
 const searchInput = document.getElementById('search-input');
@@ -14,6 +15,10 @@ const searchResults = document.querySelector('.search-results');
 const quotes = document.querySelector('.quotes');
 
 const fetchLimit = 10000; //5 * 60 * 1000;
+
+const errorMessages = {
+    TOO_MANY_REQUESTS: 'You are making too many refresh requests for this security. Please wait a few minutes then try again.'
+}
 
 const bookmarkedStocks = {
     symbols: []
@@ -105,8 +110,7 @@ function fetchDelayedQuote(lastRefresh, stock) {
     const currentTime = Date.parse(currentDayAndTime());
     const lastRefreshTime = Date.parse(lastRefresh);
     if (currentTime - lastRefreshTime < fetchLimit) {
-        console.log("TOO SOON");
-        // TODO: refreshing too soon
+        showAlert(errorMessages.TOO_MANY_REQUESTS);
         return;
     }
 

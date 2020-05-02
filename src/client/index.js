@@ -5,16 +5,21 @@ import {
     wipeOldResults 
 } from './js/stock-service';
 import './styles/app.scss';
+import './styles/alert.scss';
 import './styles/quote-search.scss';
 
 let searchButton;
 let searchInput;
 let overlay;
+let alert;
+let alertMessage;
 
 function init() {
     searchButton = document.getElementById('search-button');
     searchInput = document.getElementById('search-input'); 
     overlay = document.querySelector('.search-overlay');
+    alert = document.querySelector('.alert');
+    alertMessage = alert.querySelector('.alert-message');
 
     setupEventListeners();
 }
@@ -35,6 +40,12 @@ function setupEventListeners() {
     overlay.addEventListener('click', () => hideSearchOverlay());
 }
 
+function showAlert(message) {
+    alertMessage.innerHTML = message;
+    alert.classList.remove('hidden');
+}
+
 export {
-    init
+    init,
+    showAlert
 };

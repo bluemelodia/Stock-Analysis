@@ -1,3 +1,18 @@
+/* Margin and padding. */
+$small-margin: 10px;
+$small-padding: 8px;
+$large-padding: 15px;
+
+/* Z-indexes. */
+$overlay-z-index: 9000;
+
+/* Breakpoints. */
+$breakpoint-small-device: 500px;
+
+/* Colors. */
+$light-color: #fff;
+$dark-overlay-color: #636e729a;
+
 * {
     font-family: 'Lato', sans-serif;
     box-sizing: border-box;
@@ -5,8 +20,34 @@
     padding: 0;
 }
 
-$breakpoint-small-device: 500px;
+/* Shared flex mixins. */
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+/* Shared overlay mixin. */
+@mixin absolute-overlay($background,
+                        $top: 0, 
+                        $left: 0, 
+                        $right: 0, 
+                        $bottom: 0, 
+                        $z-index: $overlay-z-index) {
+    position: absolute;
+    top: $top;
+    left: $left;
+    right: $right;
+    bottom: $bottom;
+    z-index: $z-index;
+    background-color: $background;
+
+    &.hidden {
+        display: none;
+    }
+}
+
+/* Media queries. */
 @mixin for-size($size) {
     @if $size == small {
         @media (max-width: $breakpoint-small-device) {

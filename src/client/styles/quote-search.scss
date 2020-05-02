@@ -15,18 +15,11 @@ $large-font: 105%;
 $large-line-height: 28px;
 $font-weight-bold: 600;
 
-/* Margin and padding. */
-$small-margin: 10px;
-$small-padding: 8px;
-$large-padding: 15px;
-
 /* Colors. */
-$light-icon-color: #fff;
 $placeholder-color: #b2bec3;
 $search-input-color: #dfe6e9;
 $search-bar-blue: #0984e3;
 $search-accents-blue: #74b9ff;
-$search-overlay-color: #636e729a;
 
 $positive-num: #00b894;
 $negative-num: #d63031;
@@ -35,20 +28,11 @@ $negative-num: #d63031;
 $search-focus-blue-border: 2px solid $search-accents-blue;
 $quote-card-border: 2px solid $search-bar-blue;
 
-/* Z-indexes. */
-$overlay-z-index: 9000;
-
 /* Mixins. */
 
 @mixin qualified-full-width {
     width: $full-width;
     max-width: $max-width;
-}
-
-@mixin flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 @mixin flex-wrap-row {
@@ -135,7 +119,7 @@ $overlay-z-index: 9000;
     height: $search-bar-height;
     width: $search-bar-height;
 
-    color: $light-icon-color;
+    color: $light-color;
     background-color: $search-bar-blue;
 }
 
@@ -152,13 +136,7 @@ $overlay-z-index: 9000;
 }
 
 .search-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: $overlay-z-index;
-    background-color: $search-overlay-color;
+    @include absolute-overlay($dark-overlay-color);
 
     &.hidden {
         display: none;
@@ -219,7 +197,7 @@ $overlay-z-index: 9000;
     & .symbol {
         width: 25%;
         font-weight: $font-weight-bold;
-        
+
         /* for block-level elements, auto would return the width to 100% */
         @include for-size(small) {
             width: auto;
@@ -294,7 +272,7 @@ $overlay-z-index: 9000;
 
         & .refresh-button {
             border: none;
-            background: $light-icon-color;
+            background: $light-color;
         }
 
         & i {
