@@ -1,21 +1,21 @@
 const apiKeys = require('../secrets/api-keys');
 
-const baseURL = "https://www.alphavantage.co/query";
+const baseURL = 'https://www.alphavantage.co/query';
 const key = `&apikey=${apiKeys.avKey}`;
 
 /* API Functions */
 const AVActions = {
-    GlobalQuote: "GLOBAL_QUOTE",
-    SymbolSearch: "SYMBOL_SEARCH",
-    TimeSeriesIntraday: "TIME_SERIES_INTRADAY",
-    TimeSeriesDaily: "TIME_SERIES_DAILY_ADJUSTED",
-    TimeSeriesWeekly: "TIME_SERIES_WEEKLY_ADJUSTED",
-    TimeSeriesMonthly: "TIME_SERIES_MONTHLY"
+    GlobalQuote: 'GLOBAL_QUOTE',
+    SymbolSearch: 'SYMBOL_SEARCH',
+    TimeSeriesIntraday: 'TIME_SERIES_INTRADAY',
+    TimeSeriesDaily: 'TIME_SERIES_DAILY_ADJUSTED',
+    TimeSeriesWeekly: 'TIME_SERIES_WEEKLY_ADJUSTED',
+    TimeSeriesMonthly: 'TIME_SERIES_MONTHLY'
 };
 
 const buildAVURL = (action) => (query) => {
     const base = `${baseURL}?function=${action}`;
-    let queryParams = "";
+    let queryParams = '';
     
     switch (action) {
         case AVActions.GlobalQuote:

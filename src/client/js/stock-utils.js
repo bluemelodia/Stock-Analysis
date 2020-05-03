@@ -6,7 +6,7 @@ export const stockOps = {
 function cleanKeys(rawData) {
     let cleanData = {};
     for (let [key, value] of Object.entries(rawData)) {
-      key = key.split(". ")[1];
+      key = key.split('. ')[1];
       cleanData[key] = value;
     }
     return cleanData;

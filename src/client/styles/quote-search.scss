@@ -52,12 +52,6 @@ $quote-card-border: 2px solid $search-bar-blue;
     justify-content: space-between;
 }
 
-@mixin flex-spaced-row-centered {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 @mixin search-padding {
     padding-top: $small-padding;
     padding-bottom: $small-padding;
@@ -239,7 +233,7 @@ $quote-card-border: 2px solid $search-bar-blue;
 
     & .quote-overview {
         @include card-padding();
-        @include flex-spaced-row-centered();
+        @include flex-spaced-row();
         border-bottom: $quote-card-border;
 
         & .quote-name {

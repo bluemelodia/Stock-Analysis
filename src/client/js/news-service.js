@@ -1,7 +1,7 @@
 
 
 export const findBreakingNews = async(query = 'amazon') => {
-        console.log("Finding breaking news");
+        console.log('Finding breaking news');
         const response = await fetch(`http://localhost:3000/allNews/${query}`);
         const response2 = await fetch(`http://localhost:3000/breakingNews/${query}`);
 }

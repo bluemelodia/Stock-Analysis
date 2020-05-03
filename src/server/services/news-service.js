@@ -1,12 +1,12 @@
 const apiKeys = require('../secrets/api-keys');
 
-const baseURL = "https://newsapi.org/v2";
+const baseURL = 'https://newsapi.org/v2';
 const key = `&apikey=${apiKeys.newsKey}`;
 
 /* API Functions */
 const NewsActions = {
-    TopHeadlines: "TOP_HEADLINES",
-    Everything: "EVERYTHING"
+    TopHeadlines: 'TOP_HEADLINES',
+    Everything: 'EVERYTHING'
 };
 
 function urlForNewsAction(action) {
@@ -32,7 +32,7 @@ function currentDate() {
 
 const buildNewsURL = (action) => (query) => {
     const base = `${baseURL}/${urlForNewsAction(action)}?q=${query}`;
-    let queryParams = "";
+    let queryParams = '';
     
     switch (action) {
         case NewsActions.Everything: 

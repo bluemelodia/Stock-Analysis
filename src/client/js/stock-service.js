@@ -3,10 +3,9 @@ import { currentDayAndTime } from './number-utils';
 import { 
     createQuoteBody, 
     createQuoteHeader, 
-    minusIcon,
+    elementWithClasses,
     noResults, 
     quoteIcon,
-    plusIcon,
     searchPrompt 
 } from './templates';
 import { showAlert } from '../index'
@@ -26,14 +25,18 @@ const requestLimit = 5000;
 const fetchLimit = 15 * 60 * 1000;
 
 const errorMessages = {
+    ADD_EXISTING: 'This security is on your watch list.',
+    REMOVE_NONEXISTING: 'This security is not currently on your watch list.', 
     FAILED_REQUEST: 'We were unable to complete your request. Please try again.',
     TOO_MANY_REQUESTS: 'You are making too many requests in a short period of time. Please wait a few seconds then try again.',
-    TOO_MANY_REFRESHES: 'You are making too many refresh requests for this security. Please wait a few minutes then try again.'
+    TOO_MANY_REFRESHES: 'You are checking on this security too often. Please wait a few minutes then try again.'
 }
 
-const bookmarkedStocks = {
+const searchedQuotes = {
     symbols: []
 };
+
+const bookmarkedStocks = {};
 
 export function showSearchOverlay() {
     searchInput.classList.add('search-active');
@@ -52,14 +55,14 @@ export function wipeOldResults() {
 
 function setResultsContent(content) {
     searchResults.innerHTML = '';
-    let resultsParent = document.createElement('div');
+    let resultsParent = elementWithClasses();
     resultsParent.innerHTML = content;
     searchResults.appendChild(resultsParent);
 }
 
 export function findMatchingStocks(query) {
     const userQuery = query;
-    console.log("Query: ", userQuery);
+    console.log('Query: ', userQuery);
     if (userQuery && userQuery.length > 0) {
         getStocks(`http://localhost:3000/stocks/${userQuery}`, stockOps.tickerSearch);
     }
@@ -71,15 +74,14 @@ function displayMatchingStocks(stocks) {
     } else {
         searchResults.innerHTML = '';
 
-        let resultsParent = document.createElement('div');
+        let resultsParent = elementWithClasses();
         stocks.forEach(stock => {
-            let stockTemplate = document.createElement('div');
-            stockTemplate.classList.add('security');
+            let stockTemplate = elementWithClasses('div', ['security']);
             stockTemplate.addEventListener('click', fetchQuote.bind(null, stock));
             stockTemplate.innerHTML = `
-                <div class="symbol">${stock.symbol}</div>
-                <div class="name">${stock.name}</div>
-                <div class="type">${stock.type}</div>
+                <div class='symbol'>${stock.symbol}</div>
+                <div class='name'>${stock.name}</div>
+                <div class='type'>${stock.type}</div>
             `;
             resultsParent.appendChild(stockTemplate);
         })
@@ -121,7 +123,7 @@ const getStocks = async(url = '', stockAction, stock) => {
             displayQuote(quote);
         }
     } catch (error) {
-        console.log("There was an error processing your request: ", error);
+        console.log('There was an error processing your request: ', error);
         showAlert(errorMessages.FAILED_REQUEST);
     }
 }
@@ -143,22 +145,18 @@ function fetchQuote(stock) {
 }
 
 function displayQuote(quote) {
-    console.log("Received quote: ", quote);
+    console.log('Received quote: ', quote);
 
     const lastRefreshedDate = currentDayAndTime();
-    console.log("Last refreshed date: ", lastRefreshedDate);
+    console.log('Last refreshed date: ', lastRefreshedDate);
     const refreshHandler = fetchDelayedQuote.bind(this, lastRefreshedDate, quote);
 
-    if (!bookmarkedStocks[quote.symbol]) {
-        bookmarkedStocks.symbols.push(quote.symbol);
+    if (!searchedQuotes[quote.symbol]) {
+        searchedQuotes.symbols.push(quote.symbol);
 
         /* Create the parent containers. */
-        let quoteParent = document.createElement('div');
-        quoteParent.classList.add(quote.symbol, "quote"); // for later removal
-
-        let quoteContainer = document.createElement('div');
-        quoteContainer.classList.add("quote-container");
- 
+        let quoteParent = elementWithClasses('div', [quote.symbol, 'quote'])
+        let quoteContainer = elementWithClasses('div', ['quote-container']); 
         updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
   
         quoteParent.appendChild(quoteContainer);
@@ -170,29 +168,52 @@ function displayQuote(quote) {
         updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
     }
 
-    bookmarkedStocks[quote.symbol] = quote;
+    searchedQuotes[quote.symbol] = quote;
 }
 
 function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler) {
-       let quoteHeader = createQuoteHeader(quote, false);
-       let quoteBody = createQuoteBody(quote);
+       const symbol = quote.symbol;
+       const isWatching = isWatchedQuote(symbol);
+       const clickHandler = isWatching ? removeQuote.bind(null, symbol) : addQuote.bind(null, symbol);
+
+       const quoteHeader = createQuoteHeader(quote, isWatching, clickHandler);
+       const quoteBody = createQuoteBody(quote);
 
        /* Create the footer and add event listeners to it. */
-       let quoteFooter = document.createElement('div');
-       quoteFooter.classList.add("quote-footer");
-  
-       let lastRefreshed = document.createElement('span');
-       lastRefreshed.classList.add("last-refreshed");
+       let quoteFooter = elementWithClasses('div', ['quote-footer']);
+       let lastRefreshed = elementWithClasses('span', ['last-refreshed']);
        lastRefreshed.innerHTML = `Last Refreshed: ${lastRefreshedDate}`;
   
-       let refreshButton = document.createElement('button');
-       refreshButton.classList.add("refresh-button");
+       let refreshButton = elementWithClasses('button', ['refresh-button']); 
        refreshButton.innerHTML = quoteIcon;
        refreshButton.addEventListener('click', refreshHandler);
   
        quoteFooter.appendChild(lastRefreshed);
        quoteFooter.appendChild(refreshButton);
   
-       quoteContainer.innerHTML = quoteHeader + quoteBody;
+       quoteContainer.appendChild(quoteHeader);
+       quoteContainer.appendChild(quoteBody);
        quoteContainer.appendChild(quoteFooter);
+}
+
+function isWatchedQuote(symbol) {
+    return bookmarkedStocks[symbol];
+}
+
+function addQuote(symbol) {
+    console.log("Add quote ", symbol);
+    if (!bookmarkedStocks[symbol]) {
+        console.log("Add quote ", symbol);
+    } else {
+        showAlert(errorMessages.ADD_EXISTING);
+    }
+}
+
+function removeQuote(symbol) {
+    console.log("Remove quote ", symbol);
+    if (bookmarkedStocks[symbol]) {
+        console.log("Remove quote ", symbol);
+    } else {
+        showAlert(errorMessages.REMOVE_NONEXISTING);
+    }
 }

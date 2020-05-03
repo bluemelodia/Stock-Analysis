@@ -8,7 +8,7 @@ const port = 3000;
 /* Dependencies. */
 
 /* Node does not implement the fetch API. */
-const fetch = require("node-fetch");
+const fetch = require('node-fetch');
 const bodyParser = require('body-parser');
 
 /* Provides utilities for working with file and directory paths. */
@@ -101,12 +101,12 @@ async function getStocks(req, res, searchType) {
     const ticker = req.params.ticker;
     const stockURL = searchType === aVActions.SymbolSearch ? 
         aVSymbolSearchURL(ticker) : avQuoteURL(ticker);
-    console.log("💰 GET stocks -> ", stockURL);
+    console.log('💰 GET stocks -> ', stockURL);
 
     const stockData = await fetch(stockURL);
     try {
         const stockDataJSON = await stockData.json();
-        console.log("💰 GET stocks SUCCESS -> ", stockDataJSON);
+        console.log('💰 GET stocks SUCCESS -> ', stockDataJSON);
 
         if (stockDataJSON['Error Message']) {
             res.send(responses.reqError(responses.errMsg.INVALID_REQUEST));
@@ -116,7 +116,7 @@ async function getStocks(req, res, searchType) {
             res.send(responses.reqSuccess(stockDataJSON));
         }
     } catch (error) {
-        console.log("💰 ERROR -> ", error);
+        console.log('💰 ERROR -> ', error);
         res.send(responses.reqError(responses.errMsg.PROCESS_FAILED));
     }
 }
@@ -141,12 +141,12 @@ async function getNews(req, res, newsQueryType) {
     const query = req.params.query;
     const newsURL = newsQueryType === newsActions.TopHeadlines ? 
         newsTopHeadlines(query) : newsEverythingURL(query);
-    console.log("🗞 GET news -> ", newsURL);
+    console.log('🗞 GET news -> ', newsURL);
 
     const news = await fetch(newsURL);
     try {
         const newsJSON = await news.json();
-        console.log("🗞 GET news SUCCESS -> ", newsJSON);
+        console.log('🗞 GET news SUCCESS -> ', newsJSON);
 
         if (newsJSON.status !== 'ok') {
             res.send(responses.reqError(responses.errMsg.INVALID_REQUEST));
@@ -154,11 +154,11 @@ async function getNews(req, res, newsQueryType) {
             res.send(responses.reqSuccess(newsJSON));
         }
     } catch (error) {
-        console.log("🗞 ERROR -> ", error);
+        console.log('🗞 ERROR -> ', error);
         res.send(responses.reqError(responses.errMsg.PROCESS_FAILED));
     }
 }
 
 app.get('*', function(req, res) {
-    console.log("No other routes matched...");
+    console.log('No other routes matched...');
 });
