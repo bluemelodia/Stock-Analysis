@@ -41,17 +41,6 @@ $quote-card-border: 2px solid $search-bar-blue;
     flex-wrap: wrap;
 }
 
-@mixin flex-left-column {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-@mixin flex-spaced-row {
-    display: flex;
-    justify-content: space-between;
-}
-
 @mixin search-padding {
     padding-top: $small-padding;
     padding-bottom: $small-padding;
@@ -75,12 +64,6 @@ $quote-card-border: 2px solid $search-bar-blue;
 @mixin card-padding {
     padding-top: $small-padding;
     padding-bottom: $small-padding;
-}
-
-@mixin background-free-button($color: $main-blue) {
-    border: none;
-    background: none;
-    color: $color;
 }
 
 /* Cross-browser support for calculated max-height. */
@@ -233,11 +216,11 @@ $quote-card-border: 2px solid $search-bar-blue;
 
     & .quote-overview {
         @include card-padding();
-        @include flex-spaced-row();
+        @include flex-row($alignment: space-between);
         border-bottom: $quote-card-border;
 
         & .quote-name {
-            @include flex-left-column();
+            @include flex-column($alignment: flex-start);
         }
 
         & .quote-actions {
@@ -270,7 +253,7 @@ $quote-card-border: 2px solid $search-bar-blue;
         border-bottom: $quote-card-border;
 
         & .quote-row {
-            @include flex-spaced-row();
+            @include flex-row($alignment: space-between);
 
             & .field {
                 font-weight: $font-weight-bold;
@@ -289,7 +272,7 @@ $quote-card-border: 2px solid $search-bar-blue;
     }
 
     & .quote-footer {
-        @include flex-spaced-row();
+        @include flex-row($alignment: space-between);
 
         padding-top: $small-padding * 2;
         padding-bottom: $small-padding;

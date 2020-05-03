@@ -32,6 +32,17 @@ $main-red: #d63031;
     align-items: center;
 }
 
+@mixin flex-column($alignment: center) {
+    display: flex;
+    flex-direction: column;
+    align-items: $alignment;
+}
+
+@mixin flex-row($alignment: center) {
+    display: flex;
+    justify-content: $alignment;
+}
+
 /* Shared overlay mixin. */
 @mixin absolute-overlay($background,
                         $top: 0, 
@@ -50,6 +61,13 @@ $main-red: #d63031;
     &.hidden {
         display: none;
     }
+}
+
+/* Shared button styles. */
+@mixin background-free-button($color: $main-blue) {
+    border: none;
+    background: none;
+    color: $color;
 }
 
 /* Media queries. */

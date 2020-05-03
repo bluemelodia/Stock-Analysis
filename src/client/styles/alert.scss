@@ -11,11 +11,22 @@ $alert-message-border: 2px solid $accents-blue;
 
     @include flex-center();
 
-    & .alert-message {
+    & .alert-popup {
+        @include flex-column();
+
         background: $alert-message-background;
         border: $alert-message-border;
         color: $light-color;
         padding: $large-padding;
         width: 50%;
+
+        & .alert-header {
+            @include flex-row($alignment: flex-end);
+            width: 100%;
+
+            & .alert-button {
+                @include background-free-button($color: $light-color);
+            }
+        }
     }
 }

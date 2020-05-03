@@ -1,0 +1,18 @@
+@import './app.scss';
+
+.insights {
+    @include absolute-overlay(
+        $background: $dark-overlay-color, 
+        $z-index: $overlay-z-index + 2
+    );
+
+    @include flex-center();
+
+    & .quote-insights {
+        background: $alert-message-background;
+        border: $alert-message-border;
+        color: $light-color;
+        padding: $large-padding;
+        width: 50%;
+    }
+}

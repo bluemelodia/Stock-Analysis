@@ -4,7 +4,6 @@ import {
     showSearchOverlay,
     wipeOldResults 
 } from './js/stock-service';
-import { findBreakingNews } from './js/news-service';
 import './styles/app.scss';
 import './styles/alert.scss';
 import './styles/quote-search.scss';
@@ -12,10 +11,12 @@ import './styles/quote-search.scss';
 let searchButton;
 let searchInput;
 let overlay;
+
 let alert;
 let alertMessage;
+let alertButton;
 
-let newsButton;
+const alertTimeout = 3 * 1000;
 
 function init() {
     searchButton = document.getElementById('search-button');
@@ -23,8 +24,7 @@ function init() {
     overlay = document.querySelector('.search-overlay');
     alert = document.querySelector('.alert');
     alertMessage = alert.querySelector('.alert-message');
-
-    newsButton = document.getElementById('news-button');
+    alertButton = alert.querySelector('.alert-button');
 
     setupEventListeners();
 }
@@ -43,14 +43,16 @@ function setupEventListeners() {
         }
     });
     overlay.addEventListener('click', () => hideSearchOverlay());
-    alert.addEventListener('click', () => dismissAlert());
-    alertMessage.addEventListener('click', () => dismissAlert());
-    newsButton.addEventListener('click', () => findBreakingNews());
+    alertButton.addEventListener('click', () => dismissAlert());
 }
 
 function showAlert(message) {
     alertMessage.innerHTML = message;
     alert.classList.remove('hidden');
+
+    setTimeout(() => {
+        dismissAlert();
+    }, alertTimeout);
 }
 
 function dismissAlert() {
