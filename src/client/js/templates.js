@@ -19,9 +19,10 @@ export const noResults = `
 `;
 
 export const quoteIcon = `<i class='fa fa-refresh' style='font-size:24px'></i>`;
-const plusIcon = `<i class='fa fa-plus' style='font-size:24px'></i>`;
-const minusIcon = `<i class='fa fa-minus' style='font-size:24px'></i>`;
+const plusIcon = `<i class="fa fa-eye" style="font-size:24px"></i>`;
+const minusIcon = `<i class="fa fa-eye-slash" style="font-size:24px"></i>`;
 const analysisIcon = `<i class="fa fa-line-chart" style="font-size:24px"></i>`;
+const deleteIcon = `<i class="fa fa-close" style="font-size:24px"></i>`;
 
 export function elementWithClasses(element = 'div', classes = []) {
     let div = document.createElement(element);
@@ -31,23 +32,29 @@ export function elementWithClasses(element = 'div', classes = []) {
     return div;
 }
 
-export function createQuoteHeader(quote, isInPortfolio, portClickHandler, insightClickHandler) {
+export function createQuoteHeader(quote, isInPortfolio, portClickHandler, insightClickHandler, deleteHandler) {
     let headerContainer = elementWithClasses('div', ['quote-overview']);
     const quoteName = createQuoteName(quote);
     headerContainer.innerHTML = quoteName;
 
     let quoteActions = elementWithClasses('div', ['quote-actions']);
+    
+    let analysisButton = elementWithClasses('button', ['quote-insights']);
+    analysisButton.addEventListener('click', insightClickHandler);
+    analysisButton.innerHTML = analysisIcon;
+
     let quoteButton = elementWithClasses('button', 
         [isInPortfolio ? 'remove-card' : 'add-card']);
     quoteButton.innerHTML = isInPortfolio ? minusIcon : plusIcon;
     quoteButton.addEventListener('click', portClickHandler);
 
-    let analysisButton = elementWithClasses('button', ['quote-insights']);
-    analysisButton.addEventListener('click', insightClickHandler);
-    analysisButton.innerHTML = analysisIcon;
-
+    let deleteButton = elementWithClasses('button', ['delete-quote']);
+    deleteButton.innerHTML = deleteIcon;
+    deleteButton.addEventListener('click', deleteHandler);
+    
     quoteActions.appendChild(analysisButton);
     quoteActions.appendChild(quoteButton);
+    quoteActions.append(deleteButton);
     headerContainer.appendChild(quoteActions);
 
     return headerContainer;

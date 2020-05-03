@@ -16,7 +16,7 @@ let alert;
 let alertMessage;
 let alertButton;
 
-const alertTimeout = 3 * 1000;
+const alertTimeout = 5 * 1000;
 
 function init() {
     searchButton = document.getElementById('search-button');

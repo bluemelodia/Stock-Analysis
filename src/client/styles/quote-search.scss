@@ -231,7 +231,7 @@ $quote-card-border: 2px solid $search-bar-blue;
                     @include background-free-button($main-green);
                 }
 
-                &.remove-card {
+                &.remove-card, &.delete-quote {
                     @include background-free-button($main-red);
                 }
 
