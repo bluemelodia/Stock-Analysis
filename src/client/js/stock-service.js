@@ -36,7 +36,9 @@ const searchedQuotes = {
     symbols: []
 };
 
-const bookmarkedStocks = {};
+const bookmarkedStocks = {
+    symbols: []
+};
 
 export function showSearchOverlay() {
     searchInput.classList.add('search-active');
@@ -162,8 +164,6 @@ function displayQuote(quote) {
         let quoteContainer = elementWithClasses('div', ['quote-container']); 
         updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
   
-        quoteContainer.addEventListener('click', showQuoteInsights.bind(null, quote));
-
         quoteParent.appendChild(quoteContainer);
         quotes.appendChild(quoteParent);
     } else {
@@ -177,12 +177,18 @@ function displayQuote(quote) {
 }
 
 function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler) {
-       const symbol = quote.symbol;
-       const isWatching = isWatchedQuote(symbol);
-       const clickHandler = isWatching ? removeQuote.bind(null, symbol) : addQuote.bind(null, symbol);
-       const insightsHandler = showQuoteInsights.bind(null, symbol);
+       const isWatching = isWatchedQuote(quote.symbol);
+       const insightsHandler = showQuoteInsights.bind(null, quote.symbol);
+       const watchHandler = watchQuote.bind(null, quote);
+       const unwatchHandler = unwatchQuote.bind(null, quote);
+       const deleteHandler = deleteQuote.bind(null, quote);
 
-       const quoteHeader = createQuoteHeader(quote, isWatching, clickHandler, insightsHandler);
+       const quoteHeader = createQuoteHeader(quote, isWatching, {
+           insight: insightsHandler,
+           watch: watchHandler,
+           unwatch: unwatchHandler,
+           delete: deleteHandler
+       });
        const quoteBody = createQuoteBody(quote);
 
        /* Create the footer and add event listeners to it. */
@@ -209,20 +215,76 @@ function isWatchedQuote(symbol) {
     return bookmarkedStocks[symbol];
 }
 
-function addQuote(symbol) {
+function watchQuote(quote) {
+    const symbol = quote.symbol;
     if (!bookmarkedStocks[symbol]) {
-
+        if (configureWatchedCard(symbol)) {
+            bookmarkedStocks.symbols.push(symbol);
+            bookmarkedStocks[symbol] = quote;
+            showAlert(`Added ${symbol} to watch list.`);
+            console.log("Watched list: ", bookmarkedStocks);
+        } else {
+            showAlert(`We were unable to add ${symbol} to your watch list. Please try again later.`);
+        }
     } else {
         showAlert(errorMessages.ADD_EXISTING);
     }
 }
 
-function removeQuote(symbol) {
-    if (bookmarkedStocks[symbol]) {
+function configureWatchedCard(symbol) {
+    const quoteCard = document.querySelector(`.${symbol}.quote`);
+    try {
+        let watchButton = quoteCard.querySelector('.watch-quote');
+        watchButton.classList.add('hidden');
 
+        let deleteButton = quoteCard.querySelector('.delete-quote');
+        deleteButton.classList.add('hidden');
+
+        let unwatchButton = quoteCard.querySelector('.unwatch-quote');
+        unwatchButton.classList.remove('hidden');
+
+        return true;
+    } catch(error) {
+        return false;
+    }
+}
+
+function unwatchQuote(quote) {
+    const symbol = quote.symbol;
+    if (bookmarkedStocks[symbol]) {
+        if (configureUnwatchedCard(symbol)) {
+            bookmarkedStocks.symbols = bookmarkedStocks.symbols.filter(symbol => symbol !== quote.symbol);
+            delete bookmarkedStocks[symbol];
+            showAlert(`Removed ${symbol} from watch list.`);
+            console.log("Watched list: ", bookmarkedStocks);
+        } else {
+            showAlert(`We were unable to remove ${symbol} from your watch list. Please try again later.`);
+        }
     } else {
         showAlert(errorMessages.REMOVE_NONEXISTING);
     }
+}
+
+function configureUnwatchedCard(symbol) {
+    const quoteCard = document.querySelector(`.${symbol}.quote`);
+    try {
+        let watchButton = quoteCard.querySelector('.watch-quote');
+        watchButton.classList.remove('hidden');
+
+        let deleteButton = quoteCard.querySelector('.delete-quote');
+        deleteButton.classList.remove('hidden');
+
+        let unwatchButton = quoteCard.querySelector('.unwatch-quote');
+        unwatchButton.classList.add('hidden');
+
+        return true;
+    } catch(error) {
+        return false;
+    }
+}
+
+function deleteQuote(quote) {
+
 }
 
 function showQuoteInsights(quote) {

@@ -227,12 +227,20 @@ $quote-card-border: 2px solid $search-bar-blue;
             & button {
                 padding-left: $small-padding;
 
-                &.add-card {
+                &.watch-quote {
                     @include background-free-button($main-green);
+
+                    &.hidden {
+                        display: none;
+                    }
                 }
 
-                &.remove-card, &.delete-quote {
+                &.unwatch-quote, &.delete-quote {
                     @include background-free-button($main-red);
+
+                    &.hidden {
+                        display: none;
+                    }
                 }
 
                 &.quote-insights {

@@ -19,8 +19,8 @@ export const noResults = `
 `;
 
 export const quoteIcon = `<i class='fa fa-refresh' style='font-size:24px'></i>`;
-const plusIcon = `<i class="fa fa-eye" style="font-size:24px"></i>`;
-const minusIcon = `<i class="fa fa-eye-slash" style="font-size:24px"></i>`;
+const watchIcon = `<i class="fa fa-eye" style="font-size:24px"></i>`;
+const unwatchIcon = `<i class="fa fa-eye-slash" style="font-size:24px"></i>`;
 const analysisIcon = `<i class="fa fa-line-chart" style="font-size:24px"></i>`;
 const deleteIcon = `<i class="fa fa-close" style="font-size:24px"></i>`;
 
@@ -32,7 +32,7 @@ export function elementWithClasses(element = 'div', classes = []) {
     return div;
 }
 
-export function createQuoteHeader(quote, isInPortfolio, portClickHandler, insightClickHandler, deleteHandler) {
+export function createQuoteHeader(quote, isWatching, handlers) {
     let headerContainer = elementWithClasses('div', ['quote-overview']);
     const quoteName = createQuoteName(quote);
     headerContainer.innerHTML = quoteName;
@@ -40,20 +40,32 @@ export function createQuoteHeader(quote, isInPortfolio, portClickHandler, insigh
     let quoteActions = elementWithClasses('div', ['quote-actions']);
     
     let analysisButton = elementWithClasses('button', ['quote-insights']);
-    analysisButton.addEventListener('click', insightClickHandler);
+    analysisButton.addEventListener('click', handlers.insight);
     analysisButton.innerHTML = analysisIcon;
 
-    let quoteButton = elementWithClasses('button', 
-        [isInPortfolio ? 'remove-card' : 'add-card']);
-    quoteButton.innerHTML = isInPortfolio ? minusIcon : plusIcon;
-    quoteButton.addEventListener('click', portClickHandler);
+    let watchButton = elementWithClasses('button', ['watch-quote']);
+    watchButton.innerHTML = watchIcon;
+    watchButton.addEventListener('click', handlers.watch);
+
+    let unwatchButton = elementWithClasses('button', ['unwatch-quote']);
+    unwatchButton.innerHTML = unwatchIcon;
+    unwatchButton.addEventListener('click', handlers.unwatch);
 
     let deleteButton = elementWithClasses('button', ['delete-quote']);
     deleteButton.innerHTML = deleteIcon;
-    deleteButton.addEventListener('click', deleteHandler);
+    deleteButton.addEventListener('click', handlers.delete);
+
+    /* Users must unwatch before deleting. */
+    if (isWatching) {
+        watchButton.classList.add('hidden');
+        deleteButton.classList.add('hidden');
+    } else {
+        unwatchButton.classList.add('hidden');
+    }
     
     quoteActions.appendChild(analysisButton);
-    quoteActions.appendChild(quoteButton);
+    quoteActions.appendChild(watchButton);
+    quoteActions.appendChild(unwatchButton);
     quoteActions.append(deleteButton);
     headerContainer.appendChild(quoteActions);
 
