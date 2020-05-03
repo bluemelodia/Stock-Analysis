@@ -1,7 +1,7 @@
 # Stock-Analysis
 [Project] Analyze your stock portfolio! 
 
-Practice project using JavaScript/Sass frontend and Node.js/Express backend. The original assignment was from Udacity's Front End Nanodegree Program, which asked students to create a custom travel application. I diverged from the original prompt and created an application with the following features:
+Practice project using JavaScript/Sass frontend, Node.js/Express backend, and a Webpack configuration. The original assignment was from Udacity's Front End Nanodegree Program, which asked students to create a custom travel application. I diverged from the original prompt and created an application with the following features:
 
 Features:
 
@@ -17,10 +17,11 @@ Features:
                 - Users can clear recently searched securities, as well as add and un-watch securities of their choice. Watched securities will be persisted across user sessions.
                 - Users can view detailed insights about each security, including a  news feed and sentiment analysis on the security.
 
-        APIs used: 
-                Alpha Vantage: https://www.alphavantage.co
-                Aylien: https://developer.aylien.com
-                News API: https://newsapi.org/
+APIs used: 
+        
+        Alpha Vantage: https://www.alphavantage.co
+        Aylien: https://developer.aylien.com
+        News API: https://newsapi.org/
 
 To get Webpack running:
 
