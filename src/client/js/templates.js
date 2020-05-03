@@ -21,6 +21,7 @@ export const noResults = `
 export const quoteIcon = `<i class='fa fa-refresh' style='font-size:24px'></i>`;
 const plusIcon = `<i class='fa fa-plus' style='font-size:24px'></i>`;
 const minusIcon = `<i class='fa fa-minus' style='font-size:24px'></i>`;
+const analysisIcon = `<i class="fa fa-line-chart" style="font-size:24px"></i>`;
 
 export function elementWithClasses(element = 'div', classes = []) {
     let div = document.createElement(element);
@@ -30,7 +31,7 @@ export function elementWithClasses(element = 'div', classes = []) {
     return div;
 }
 
-export function createQuoteHeader(quote, isInPortfolio, quoteClickHandler) {
+export function createQuoteHeader(quote, isInPortfolio, portClickHandler, insightClickHandler) {
     let headerContainer = elementWithClasses('div', ['quote-overview']);
     const quoteName = createQuoteName(quote);
     headerContainer.innerHTML = quoteName;
@@ -39,8 +40,13 @@ export function createQuoteHeader(quote, isInPortfolio, quoteClickHandler) {
     let quoteButton = elementWithClasses('button', 
         [isInPortfolio ? 'remove-card' : 'add-card']);
     quoteButton.innerHTML = isInPortfolio ? minusIcon : plusIcon;
-    quoteButton.addEventListener('click', quoteClickHandler);
+    quoteButton.addEventListener('click', portClickHandler);
 
+    let analysisButton = elementWithClasses('button', ['quote-insights']);
+    analysisButton.addEventListener('click', insightClickHandler);
+    analysisButton.innerHTML = analysisIcon;
+
+    quoteActions.appendChild(analysisButton);
     quoteActions.appendChild(quoteButton);
     headerContainer.appendChild(quoteActions);
 

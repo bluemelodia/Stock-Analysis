@@ -121,7 +121,18 @@ async function getStocks(req, res, searchType) {
     }
 }
 
-/* New API - GET news related to this symbol. */
+/* POST symbol to add to portfolio. */
+app.post('/addSymbol', addSymbol);
+async function addSymbol(req, res) {
+
+}
+
+app.delete('/removeSymbol', removeSymbol);
+async function removeSymbol(req, res) {
+    
+}
+
+/* News API - GET news related to this symbol. */
 app.get('/allNews/:query', getAllNews);
 async function getAllNews(req, res) {
     getNews(req, res, newsActions.Everything);

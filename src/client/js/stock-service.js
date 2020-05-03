@@ -20,8 +20,8 @@ let timeOfLastRequest;
 /* This is added because of Alpha Vantage API limits. */
 const requestLimit = 5000;
 
-/* This is intentionally kept long because users should not be trying to get
- * updated information on securities too often. */
+/* In addition to AV API Limits, this timeout is intentionally kept long because 
+ * users should not be trying to get updated information on securities too often. */
 const fetchLimit = 15 * 60 * 1000;
 
 const errorMessages = {
@@ -144,6 +144,9 @@ function fetchQuote(stock) {
     getStocks(`http://localhost:3000/quote/${stock.symbol}`, stockOps.globalQuote, stock);
 }
 
+/* Functions related to displaying the details of a quote card. 
+ * If the user is making a request for a security that they have already searched
+ * for, the update will be made in place. Otherwise, a new card will be added. */
 function displayQuote(quote) {
     console.log('Received quote: ', quote);
 
@@ -159,6 +162,8 @@ function displayQuote(quote) {
         let quoteContainer = elementWithClasses('div', ['quote-container']); 
         updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
   
+        quoteContainer.addEventListener('click', showQuoteInsights.bind(null, quote));
+
         quoteParent.appendChild(quoteContainer);
         quotes.appendChild(quoteParent);
     } else {
@@ -175,8 +180,9 @@ function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshH
        const symbol = quote.symbol;
        const isWatching = isWatchedQuote(symbol);
        const clickHandler = isWatching ? removeQuote.bind(null, symbol) : addQuote.bind(null, symbol);
+       const insightsHandler = showQuoteInsights.bind(null, symbol);
 
-       const quoteHeader = createQuoteHeader(quote, isWatching, clickHandler);
+       const quoteHeader = createQuoteHeader(quote, isWatching, clickHandler, insightsHandler);
        const quoteBody = createQuoteBody(quote);
 
        /* Create the footer and add event listeners to it. */
@@ -196,24 +202,29 @@ function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshH
        quoteContainer.appendChild(quoteFooter);
 }
 
+/* Functions related to adding/removing securities from a watch list. Adding a security
+ * to the watch list means that the server will fetch these securities at the start of
+ * the next user session. */
 function isWatchedQuote(symbol) {
     return bookmarkedStocks[symbol];
 }
 
 function addQuote(symbol) {
-    console.log("Add quote ", symbol);
     if (!bookmarkedStocks[symbol]) {
-        console.log("Add quote ", symbol);
+
     } else {
         showAlert(errorMessages.ADD_EXISTING);
     }
 }
 
 function removeQuote(symbol) {
-    console.log("Remove quote ", symbol);
     if (bookmarkedStocks[symbol]) {
-        console.log("Remove quote ", symbol);
+
     } else {
         showAlert(errorMessages.REMOVE_NONEXISTING);
     }
+}
+
+function showQuoteInsights(quote) {
+    console.log("Show insights for: ", quote);
 }

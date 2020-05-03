@@ -241,13 +241,19 @@ $quote-card-border: 2px solid $search-bar-blue;
         }
 
         & .quote-actions {
-            & button.add-card {
+            & button {
+                padding-left: $small-padding;
+
                 &.add-card {
                     @include background-free-button($main-green);
                 }
 
                 &.remove-card {
                     @include background-free-button($main-red);
+                }
+
+                &.quote-insights {
+                    @include background-free-button();
                 }
             }
         }
