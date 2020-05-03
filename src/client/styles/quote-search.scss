@@ -21,8 +21,8 @@ $search-input-color: #dfe6e9;
 $search-bar-blue: $main-blue;
 $search-accents-blue: $accents-blue;
 
-$positive-num: #00b894;
-$negative-num: #d63031;
+$positive-num: $main-green;
+$negative-num: $main-red;
 
 /* Borders. */
 $search-focus-blue-border: 2px solid $search-accents-blue;
@@ -52,6 +52,12 @@ $quote-card-border: 2px solid $search-bar-blue;
     justify-content: space-between;
 }
 
+@mixin flex-spaced-row-centered {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 @mixin search-padding {
     padding-top: $small-padding;
     padding-bottom: $small-padding;
@@ -75,6 +81,12 @@ $quote-card-border: 2px solid $search-bar-blue;
 @mixin card-padding {
     padding-top: $small-padding;
     padding-bottom: $small-padding;
+}
+
+@mixin background-free-button($color: $main-blue) {
+    border: none;
+    background: none;
+    color: $color;
 }
 
 /* Cross-browser support for calculated max-height. */
@@ -174,7 +186,7 @@ $quote-card-border: 2px solid $search-bar-blue;
     height: $full-height;
 
     & i {
-        color: $search-bar-blue;
+        @include background-free-button();
     }
 }
 
@@ -226,9 +238,25 @@ $quote-card-border: 2px solid $search-bar-blue;
     @include search-padding();
 
     & .quote-overview {
-        @include flex-left-column();
         @include card-padding();
+        @include flex-spaced-row-centered();
         border-bottom: $quote-card-border;
+
+        & .quote-name {
+            @include flex-left-column();
+        }
+
+        & .quote-actions {
+            & button.add-card {
+                &.add-card {
+                    @include background-free-button($main-green);
+                }
+
+                &.remove-card {
+                    @include background-free-button($main-red);
+                }
+            }
+        }
     
         & .type {
             text-align: left;
@@ -267,12 +295,7 @@ $quote-card-border: 2px solid $search-bar-blue;
         padding-bottom: $small-padding;
 
         & .refresh-button {
-            border: none;
-            background: $light-color;
-        }
-
-        & i {
-            color: $search-bar-blue;
+            @include background-free-button();
         }
     }
 }

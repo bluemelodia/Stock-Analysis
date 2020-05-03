@@ -4,6 +4,7 @@ import {
     showSearchOverlay,
     wipeOldResults 
 } from './js/stock-service';
+import { findBreakingNews } from './js/news-service';
 import './styles/app.scss';
 import './styles/alert.scss';
 import './styles/quote-search.scss';
@@ -14,12 +15,16 @@ let overlay;
 let alert;
 let alertMessage;
 
+let newsButton;
+
 function init() {
     searchButton = document.getElementById('search-button');
     searchInput = document.getElementById('search-input'); 
     overlay = document.querySelector('.search-overlay');
     alert = document.querySelector('.alert');
     alertMessage = alert.querySelector('.alert-message');
+
+    newsButton = document.getElementById('news-button');
 
     setupEventListeners();
 }
@@ -40,6 +45,7 @@ function setupEventListeners() {
     overlay.addEventListener('click', () => hideSearchOverlay());
     alert.addEventListener('click', () => dismissAlert());
     alertMessage.addEventListener('click', () => dismissAlert());
+    newsButton.addEventListener('click', () => findBreakingNews());
 }
 
 function showAlert(message) {

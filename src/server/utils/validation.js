@@ -1,9 +1,9 @@
-/* Tickers can only have alphanumeric characters. */
-function isValidTicker(ticker) {
-    const sanitizedTicker =  ticker.replace(/\W/g, '');
-    return sanitizedTicker.length < 1 ? false : true;
+/* Tickers and queries can only have alphanumeric characters. */
+function isValid(query) {
+    const sanitizedQuery =  query.replace(/\W/g, '');
+    return sanitizedQuery.length < 1 ? false : true;
 }
 
 module.exports = {
-    isValidTicker,
+    isValid
 };

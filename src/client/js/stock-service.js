@@ -3,8 +3,10 @@ import { currentDayAndTime } from './number-utils';
 import { 
     createQuoteBody, 
     createQuoteHeader, 
+    minusIcon,
     noResults, 
     quoteIcon,
+    plusIcon,
     searchPrompt 
 } from './templates';
 import { showAlert } from '../index'
@@ -172,8 +174,8 @@ function displayQuote(quote) {
 }
 
 function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler) {
-        let quoteHeader = createQuoteHeader(quote);
-        let quoteBody = createQuoteBody(quote);
+       let quoteHeader = createQuoteHeader(quote, false);
+       let quoteBody = createQuoteBody(quote);
 
        /* Create the footer and add event listeners to it. */
        let quoteFooter = document.createElement('div');

@@ -19,12 +19,21 @@ export const noResults = `
 `;
 
 export const quoteIcon = `<i class="fa fa-refresh" style="font-size:24px"></i>`;
+export const plusIcon = `<i class="fa fa-plus" style="font-size:24px"></i>`;
+export const minusIcon = `<i class="fa fa-minus" style="font-size:24px"></i>`;
 
-export function createQuoteHeader(quote) {
+export function createQuoteHeader(quote, isInPortfolio) {
     return `
         <div class="quote-overview">
-            <div class="symbol">${quote.symbol}</div>
-            <div class="name">${quote.name}</div>
+            <div class="quote-name">
+                <div class="symbol">${quote.symbol}</div>
+                <div class="name">${quote.name}</div>
+            </div>
+            <div class="quote-actions">
+                <button class="${ isInPortfolio ? 'remove-card' : 'add-card' }">
+                    ${ isInPortfolio ? minusIcon : plusIcon }
+                </button>
+            </div>
         </div>`;
 }
 

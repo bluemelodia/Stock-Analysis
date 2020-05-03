@@ -62,11 +62,17 @@ const server = app.listen(port, () => {
     console.log(`running on localhost: ${port}`);
 }) 
 
-/* Alpha Vantage URLs and utils */
+/* Alpha Vantage URLs and utils. */
 const aVService = require('./services/av-service');
 const aVActions = aVService.AVActions;
 const aVSymbolSearchURL = aVService.avURL(aVActions.SymbolSearch);
 const avQuoteURL = aVService.avURL(aVActions.GlobalQuote);
+
+/* News API URLs and utils. */
+const newsService = require('./services/news-service');
+const newsActions = newsService.NewsActions;
+const newsEverythingURL = newsService.newsURL(newsActions.Everything);
+const newsTopHeadlines = newsService.newsURL(newsActions.TopHeadlines);
 
 /* Methods to provide input validation. */
 const validation = require('./utils/validation');
@@ -87,7 +93,7 @@ async function getGlobalQuote(req, res) {
 }
 
 async function getStocks(req, res, searchType) {
-    if (!req.params.ticker || !validation.isValidTicker(req.params.ticker)) {
+    if (!req.params.ticker || !validation.isValid(req.params.ticker)) {
         res.send(responses.reqError(responses.errMsg.MISSING_OR_INVALID_PARAMETERS));
         return;
     }
@@ -111,6 +117,44 @@ async function getStocks(req, res, searchType) {
         }
     } catch (error) {
         console.log("💰 ERROR -> ", error);
+        res.send(responses.reqError(responses.errMsg.PROCESS_FAILED));
+    }
+}
+
+/* New API - GET news related to this symbol. */
+app.get('/allNews/:query', getAllNews);
+async function getAllNews(req, res) {
+    getNews(req, res, newsActions.Everything);
+}
+
+app.get('/breakingNews/:query', getBreakingNews);
+async function getBreakingNews(req, res) {
+    getNews(req, res, newsActions.TopHeadlines);
+}
+
+async function getNews(req, res, newsQueryType) {
+    if (!req.params.query && !validation.isValid(newsQuery)) {
+        res.send(responses.reqError(responses.errMsg.MISSING_OR_INVALID_PARAMETERS));
+        return;
+    }
+
+    const query = req.params.query;
+    const newsURL = newsQueryType === newsActions.TopHeadlines ? 
+        newsTopHeadlines(query) : newsEverythingURL(query);
+    console.log("🗞 GET news -> ", newsURL);
+
+    const news = await fetch(newsURL);
+    try {
+        const newsJSON = await news.json();
+        console.log("🗞 GET news SUCCESS -> ", newsJSON);
+
+        if (newsJSON.status !== 'ok') {
+            res.send(responses.reqError(responses.errMsg.INVALID_REQUEST));
+        } else {
+            res.send(responses.reqSuccess(newsJSON));
+        }
+    } catch (error) {
+        console.log("🗞 ERROR -> ", error);
         res.send(responses.reqError(responses.errMsg.PROCESS_FAILED));
     }
 }
