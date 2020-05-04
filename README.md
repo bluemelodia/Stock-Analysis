@@ -12,9 +12,12 @@ Features:
         Quote Cards:
                 - Users can view a list of recently searched securities, which are presented to the users as cards. 
                 - Users can refresh the card and fetch the latest data for any searched security every 15 minutes.
+        
+        Watching Securities: 
+                - Users can clear recently searched securities, as well as add and un-watch securities of their choice. 
 
         To Implement:
-                - Users can clear recently searched securities, as well as add and un-watch securities of their choice. Watched securities will be persisted across user sessions.
+                - Watched securities will be persisted across user sessions.
                 - Users can view detailed insights about each security, including a  news feed and sentiment analysis on the security.
 
 APIs used: 

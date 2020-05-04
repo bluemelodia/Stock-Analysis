@@ -219,11 +219,20 @@ $quote-card-border: 2px solid $search-bar-blue;
         @include flex-row($alignment: space-between);
         border-bottom: $quote-card-border;
 
+        @include for-size(small) {
+            flex-direction: column;
+        }
+
         & .quote-name {
             @include flex-column($alignment: flex-start);
         }
 
         & .quote-actions {
+            @include for-size(small) {
+                @include flex-row($alignment: flex-end);
+                padding-top: $small-padding;
+            }
+
             & button {
                 padding-left: $small-padding;
 

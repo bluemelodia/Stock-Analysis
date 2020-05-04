@@ -14,5 +14,4 @@ export function findRecentNews(query) {
 // TODO: let users save and delete stocks (save in Firebase) - on login, retrieve their info. 
 // TODO: when making service calls, if they have too many stocks, space out the calls (15 seconds between calls).
 // TODO: the database only really needs the list of symbols. 
-// TODO: only let users delete stuff they've unwatched. 
 // TODO: add loadmasks
