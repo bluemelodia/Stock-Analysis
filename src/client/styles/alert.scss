@@ -2,6 +2,9 @@
 
 $alert-message-background: $main-blue;
 $alert-message-border: 2px solid $accents-blue;
+$alert-error-border: 2px solid $accents-red;
+$alert-warning-border: 2px solid $accents-orange;
+$alert-success-border: 2px solid $accents-green;
 
 .alert {
     @include absolute-overlay(
@@ -19,6 +22,21 @@ $alert-message-border: 2px solid $accents-blue;
         color: $light-color;
         padding: $large-padding;
         width: 50%;
+
+        &.success {
+            background: $main-green;
+            border: $alert-success-border;
+        }
+
+        &.warning {
+            background: $main-orange;
+            border: $alert-warning-border;
+        }
+
+        &.error {
+            background: $main-red;
+            border: $alert-error-border;
+        }
 
         & .alert-header {
             @include flex-row($alignment: flex-end);

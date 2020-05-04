@@ -8,7 +8,7 @@ import {
     quoteIcon,
     searchPrompt 
 } from './templates';
-import { showAlert } from '../index'
+import { showAlert, alertType } from '../index'
 
 const overlay = document.querySelector('.search-overlay');
 const searchInput = document.getElementById('search-input');
@@ -96,7 +96,7 @@ const getStocks = async(url = '', stockAction, stock) => {
     const currentTime = Date.parse(currentDayAndTime());
 
     if (timeOfLastRequest && currentTime - Date.parse(timeOfLastRequest) < requestLimit) {
-        showAlert(errorMessages.TOO_MANY_REQUESTS);
+        showAlert(errorMessages.TOO_MANY_REQUESTS, alertType.warning);
         return;
     }
 
@@ -126,7 +126,7 @@ const getStocks = async(url = '', stockAction, stock) => {
         }
     } catch (error) {
         console.log('There was an error processing your request: ', error);
-        showAlert(errorMessages.FAILED_REQUEST);
+        showAlert(errorMessages.FAILED_REQUEST, alertType.error);
     }
 }
 
@@ -134,7 +134,7 @@ function fetchDelayedQuote(lastRefresh, stock) {
     const currentTime = Date.parse(currentDayAndTime());
     const lastRefreshTime = Date.parse(lastRefresh);
     if (currentTime - lastRefreshTime < fetchLimit) {
-        showAlert(errorMessages.TOO_MANY_REFRESHES);
+        showAlert(errorMessages.TOO_MANY_REFRESHES, alertType.warning);
         return;
     }
 
@@ -153,23 +153,27 @@ function displayQuote(quote) {
     console.log('Received quote: ', quote);
 
     const lastRefreshedDate = currentDayAndTime();
-    console.log('Last refreshed date: ', lastRefreshedDate);
+    console.log('Last refreshed date: ', lastRefreshedDate, searchedQuotes);
     const refreshHandler = fetchDelayedQuote.bind(this, lastRefreshedDate, quote);
 
     if (!searchedQuotes[quote.symbol]) {
         searchedQuotes.symbols.push(quote.symbol);
 
         /* Create the parent containers. */
-        let quoteParent = elementWithClasses('div', [quote.symbol, 'quote'])
+        let quoteParent = elementWithClasses('div', ['quote']);
+        quoteParent.id = quote.symbol;
+
         let quoteContainer = elementWithClasses('div', ['quote-container']); 
         updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
   
         quoteParent.appendChild(quoteContainer);
         quotes.appendChild(quoteParent);
     } else {
+        console.log('update'        );
         /* Update the current entry. */
-        const quoteCard = document.querySelector(`.${quote.symbol}.quote`);
+        const quoteCard = document.getElementById(quote.symbol);
         let quoteContainer = quoteCard.querySelector('.quote-container');
+        quoteContainer.innerHTML = '';
         updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
     }
 
@@ -221,18 +225,22 @@ function watchQuote(quote) {
         if (configureWatchedCard(symbol)) {
             bookmarkedStocks.symbols.push(symbol);
             bookmarkedStocks[symbol] = quote;
-            showAlert(`Added ${symbol} to watch list.`);
+            showAlert(`Added ${symbol} to watch list.`, alertType.success);
             console.log("Watched list: ", bookmarkedStocks);
         } else {
-            showAlert(`We were unable to add ${symbol} to your watch list. Please try again later.`);
+            showAlert(
+                `We were unable to add ${symbol} to your watch list. Please try again later.`, 
+                alertType.error
+            );
         }
     } else {
-        showAlert(errorMessages.ADD_EXISTING);
+        showAlert(errorMessages.ADD_EXISTING, alertType.error);
     }
 }
 
 function configureWatchedCard(symbol) {
-    const quoteCard = document.querySelector(`.${symbol}.quote`);
+    const quoteCard = document.getElementById(symbol);
+
     try {
         let watchButton = quoteCard.querySelector('.watch-quote');
         watchButton.classList.add('hidden');
@@ -245,6 +253,7 @@ function configureWatchedCard(symbol) {
 
         return true;
     } catch(error) {
+        console.log("ERROR", error);
         return false;
     }
 }
@@ -255,13 +264,16 @@ function unwatchQuote(quote) {
         if (configureUnwatchedCard(symbol)) {
             bookmarkedStocks.symbols = bookmarkedStocks.symbols.filter(symbol => symbol !== quote.symbol);
             delete bookmarkedStocks[symbol];
-            showAlert(`Removed ${symbol} from watch list.`);
+            showAlert(`Removed ${symbol} from watch list.`, alertType.success);
             console.log("Watched list: ", bookmarkedStocks);
         } else {
-            showAlert(`We were unable to remove ${symbol} from your watch list. Please try again later.`);
+            showAlert(
+                `We were unable to remove ${symbol} from your watch list. Please try again later.`,
+                alertType.error
+            );
         }
     } else {
-        showAlert(errorMessages.REMOVE_NONEXISTING);
+        showAlert(errorMessages.REMOVE_NONEXISTING, alertType.error);
     }
 }
 
