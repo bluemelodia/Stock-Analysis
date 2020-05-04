@@ -278,7 +278,7 @@ function unwatchQuote(quote) {
 }
 
 function configureUnwatchedCard(symbol) {
-    const quoteCard = document.querySelector(`.${symbol}.quote`);
+    const quoteCard = document.getElementById(symbol);
     try {
         let watchButton = quoteCard.querySelector('.watch-quote');
         watchButton.classList.remove('hidden');
