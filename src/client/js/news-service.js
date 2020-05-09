@@ -1,9 +1,15 @@
-import { currentDayAndTime } from './number-utils';
-import { advancedQuery, parseArticle } from './news-utils';
 import { alertType, showAlert } from '../index'
+import { advancedQuery, parseArticle } from './news-utils';
+import { currentDayAndTime } from './number-utils';
+import { createArticle, elementWithClasses } from './templates';
+
+const insights = document.querySelector('.quote-insights');
+const newsPanel = insights.querySelector('.quote-news');
 
 let timeOfLastRequest;
-const requestLimit = 5000;
+const requestLimit = 15000;
+
+// TODO: cache articles & last refreshed date for each.
 
 const errorMessages = {
         FAILED_REQUEST: 'We were unable to fetch the news. Please try again.',
@@ -24,18 +30,12 @@ export async function findNews(symbol, name) {
         const simpleQuery = advancedQuery(name);
 
         const breakingNews = await getNews(`http://localhost:3000/breakingNews/${simpleQuery}`);
-        console.log("Breaking news: ", breakingNews);
+        const allNews = await getNews(`http://localhost:3000/allNews/${everythingQuery}`);
 
-        if (breakingNews.statusCode !== 0) {
-                showAlert(errorMessages.FAILED_REQUEST, alertType.error);
-        } else {
-                const allNews = await getNews(`http://localhost:3000/allNews/${everythingQuery}`);
-                console.log("All news: ", allNews);
-                if (allNews.statusCode !== 0) {
-                        showAlert(errorMessages.FAILED_REQUEST, alertType.error);
-                }
-        }
+        console.log("Breaking news: ", breakingNews);
+        console.log("All news: ", allNews);
         timeOfLastRequest = currentDayAndTime();
+        displayNews(breakingNews, allNews);
 }
 
 const getNews = async(url = '') => {
@@ -61,6 +61,28 @@ const getNews = async(url = '') => {
                 console.log("ERROR: ", error);
                 return { news: null, statusCode: -1 };
         }
+}
+
+function displayNews(breakingNews, allNews) {
+        newsPanel.innerHTML = '';
+
+        const newsContainer = elementWithClasses('div', ['news-container']);
+
+        if (breakingNews && breakingNews.news) {
+                breakingNews.news.forEach(article => {
+                        const breakingArticle = createArticle(article, true);
+                        newsContainer.appendChild(breakingArticle);
+                });
+        }  
+
+        if (allNews && allNews.news) {
+                allNews.news.forEach(article => {
+                        const normalArticle = createArticle(article);
+                        newsContainer.appendChild(normalArticle);
+                });
+        }
+
+        newsPanel.appendChild(newsContainer);
 }
 
 // TODO: send breaking news reports about the stocks in the investor's portfolio. 

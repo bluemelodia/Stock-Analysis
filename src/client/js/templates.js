@@ -122,3 +122,38 @@ function createQuote(quote) {
         </div>
     `;
 }
+
+export function createArticle(article, isBreakingNews = false) {
+    let articleContainer = elementWithClasses('div', ['article']);
+    if (isBreakingNews) {
+        articleContainer.classList.add('breaking-news');
+    }
+    articleContainer.innerHTML = createArticleBody(article);
+
+    return articleContainer;
+}
+
+function createArticleBody(article) {
+    return `
+        <div class="article-body">
+            <div class="article-overview">
+                <div-class="title">${article.title}</div>
+                <div class="article-source">
+                    <div-class="source">${article.source}</div>
+                    <div-class="author">${article.author}</div>
+                </div>
+            </div>
+            <div class="article-details">
+                <div class="article-description">
+                    ${article.description}
+                </div>
+                <div class="article-content">
+                    ${article.content}
+                </div>
+            </div>
+        </div>
+        <div class="article-img">
+            <img src="${article.image}"/>
+        </div>
+    `;
+}
