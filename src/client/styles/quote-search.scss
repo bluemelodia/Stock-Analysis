@@ -7,6 +7,8 @@ $full-height: 100%;
 $max-width: 700px;
 $card-max-width: 400px;
 
+$company-name-max-width: 250px;
+
 $min-search-results-height: 48px;
 $max-search-results-height: 400px;
 $search-bar-height: 48px;
@@ -201,6 +203,12 @@ $quote-card-border: 2px solid $search-bar-blue;
            
         @include for-size(small) {
             flex-direction: column;
+        }
+
+        & .quote-name {
+            & .name {
+                max-width: $company-name-max-width;
+            }
         }
 
         & .quote-actions {

@@ -113,8 +113,13 @@ const getStocks = async(url = '', stockAction, stock) => {
         if (stockAction === stockOps.tickerSearch) {
             let stocks = [];
             for (let rawStock of stockData.responseData.bestMatches) {
-                let stock = parseSymbol(rawStock, stockAction);
-                stocks.push(stock);
+                try {           
+                    let stock = parseSymbol(rawStock, stockAction);
+                    stocks.push(stock);
+                } catch(error) {
+                    console.log(`There was an error parsing: ${rawStock}: `, error);
+                    continue;
+                }
             }
             displayMatchingStocks(stocks);
         } else {

@@ -103,7 +103,7 @@ function showInsights(symbol, name) {
     insightsSymbol.innerHTML = symbol;
     insightsName.innerHTML = name;
 
-    findNews(`+(${symbol} OR (${meaningfulQuery(name)}))`);
+    findNews(symbol, name);
 }
 
 function dismissInsights() {

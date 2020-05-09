@@ -1,4 +1,5 @@
 import { currentDayAndTime } from './number-utils';
+import { advancedQuery, parseArticle } from './news-utils';
 
 let timeOfLastRequest;
 const requestLimit = 5000;
@@ -8,11 +9,22 @@ const errorMessages = {
         TOO_MANY_REFRESHES: 'You are checking the news too often. Please wait a few minutes then try again.'
 }
 
-export function findNews(query) {
-        getRecentNews(`http://localhost:3000/allNews/${query}`);
+export async function findNews(symbol, name) {
+        const everythingQuery = `+(${symbol} OR (${advancedQuery(name, ' AND ')}))`;
+        const simpleQuery = advancedQuery(name);
+
+        const breakingNews = await getNews(`http://localhost:3000/breakingNews/${simpleQuery}`);
+        if (breakingNews.statusCode !== 0) {
+                showAlert(errorMessages.FAILED_REQUEST, alertType.error);
+        } else {
+                const allNews = await getNews(`http://localhost:3000/allNews/${everythingQuery}`);
+                if (allNews.statusCode !== 0) {
+                        showAlert(errorMessages.FAILED_REQUEST, alertType.error);
+                }
+        }
 }
 
-const getRecentNews = async(url = '', query = '') => {
+const getNews = async(url = '') => {
         const currentTime = Date.parse(currentDayAndTime());
 
         if (timeOfLastRequest && currentTime - Date.parse(timeOfLastRequest) < requestLimit) {
@@ -24,16 +36,25 @@ const getRecentNews = async(url = '', query = '') => {
 
         try {
                 const newsData = await response.json();
+                console.log("NEWS: ", newsData);
                 if (newsData.statusCode !== 0) {
                         throw newsData.errorMsg;
                 }
                 let news = [];
-                for (let article of newsData.responseData.articles) {
-                        news.push(article);
+                for (let rawArticle of newsData.responseData.articles) {
+                        try {           
+                                const article = parseArticle(rawArticle);
+                                news.push(article);
+                            } catch(error) {
+                                console.log(`There was an error parsing: ${rawArticle}: `, error);
+                                continue;
+                            }
                 }
                 console.log("news: ", news);
+                return { news: news, statusCode: 0};
         } catch (error) {
-                showAlert(errorMessages.FAILED_REQUEST, alertType.error);
+                console.log("ERROR: ", error);
+                return { news: null, statusCode: -1 };
         }
 }
 

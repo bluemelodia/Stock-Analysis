@@ -5,9 +5,7 @@ $quote-insights-border: 2px solid $main-blue;
 
 $quote-desktop-width: 85%;
 $quote-mobile-width: 100%;
-
 $quote-max-width: 750px;
-$quote-max-height: 750px;
 
 .insights {
     @include absolute-overlay(
@@ -25,7 +23,6 @@ $quote-max-height: 750px;
         width: $quote-desktop-width;
         height: $quote-desktop-width;
         max-width: $quote-max-width;
-        max-height: $quote-max-height;
 
         @include for-size(small) {
             width: $quote-mobile-width;
@@ -34,6 +31,9 @@ $quote-max-height: 750px;
 
         & .quote-overview {        
             @include quote-overview();
+            @include for-size(small) {
+                align-items: flex-start;
+            }
             
             & .quote-actions {
                 @include quote-actions();
