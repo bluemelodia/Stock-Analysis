@@ -6,6 +6,8 @@ $alert-error-border: 2px solid $accents-red;
 $alert-warning-border: 2px solid $accents-orange;
 $alert-success-border: 2px solid $accents-green;
 
+$alert-max-width: 500px;
+
 .alert {
     @include absolute-overlay(
         $background: $dark-overlay-color, 
@@ -21,7 +23,9 @@ $alert-success-border: 2px solid $accents-green;
         border: $alert-message-border;
         color: $light-color;
         padding: $large-padding;
+
         width: 50%;
+        max-width: 500px; 
 
         &.success {
             background: $main-green;

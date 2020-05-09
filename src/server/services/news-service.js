@@ -38,7 +38,7 @@ const buildNewsURL = (action) => (query) => {
         case NewsActions.Everything: 
             /* Ex: https://newsapi.org/v2/everything?q=apple&from=2020-05-02&to=2020-05-02&sortBy=popularity&apiKey=demo */
             const date = currentDate();
-            queryParams = `&from=${date}&to=${date}&sortBy=popularity`;
+            queryParams = `&from=${date}&to=${date}&sortBy=relevancy&language=en`;
             break;
         default:
             queryParams = `&pageSize=25`;

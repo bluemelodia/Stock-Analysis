@@ -4,6 +4,13 @@ import {
     showSearchOverlay,
     wipeOldResults 
 } from './js/stock-service';
+
+import { meaningfulQuery } from './js/stock-utils';
+
+import { 
+    findNews
+} from './js/news-service';
+
 import './styles/app.scss';
 import './styles/alert.scss';
 import './styles/quote-common.scss';
@@ -95,6 +102,8 @@ function showInsights(symbol, name) {
     insightsOverlay.classList.remove('hidden');
     insightsSymbol.innerHTML = symbol;
     insightsName.innerHTML = name;
+
+    findNews(`+(${symbol} OR (${meaningfulQuery(name)}))`);
 }
 
 function dismissInsights() {

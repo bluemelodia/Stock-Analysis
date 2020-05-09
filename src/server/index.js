@@ -129,7 +129,7 @@ async function addSymbol(req, res) {
 
 app.delete('/removeSymbol', removeSymbol);
 async function removeSymbol(req, res) {
-    
+
 }
 
 /* News API - GET news related to this symbol. */
@@ -144,12 +144,12 @@ async function getBreakingNews(req, res) {
 }
 
 async function getNews(req, res, newsQueryType) {
-    if (!req.params.query && !validation.isValid(newsQuery)) {
+    if (!req.params.query) {
         res.send(responses.reqError(responses.errMsg.MISSING_OR_INVALID_PARAMETERS));
         return;
     }
 
-    const query = req.params.query;
+    const query = encodeURI(req.params.query);
     const newsURL = newsQueryType === newsActions.TopHeadlines ? 
         newsTopHeadlines(query) : newsEverythingURL(query);
     console.log('🗞 GET news -> ', newsURL);

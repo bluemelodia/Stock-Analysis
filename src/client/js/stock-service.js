@@ -65,7 +65,6 @@ function setResultsContent(content) {
 
 export function findMatchingStocks(query) {
     const userQuery = query;
-    console.log('Query: ', userQuery);
     if (userQuery && userQuery.length > 0) {
         getStocks(`http://localhost:3000/stocks/${userQuery}`, stockOps.tickerSearch);
     }
@@ -126,7 +125,6 @@ const getStocks = async(url = '', stockAction, stock) => {
             displayQuote(quote);
         }
     } catch (error) {
-        console.log('There was an error processing your request: ', error);
         showAlert(errorMessages.FAILED_REQUEST, alertType.error);
     }
 }
@@ -151,10 +149,7 @@ function fetchQuote(stock) {
  * If the user is making a request for a security that they have already searched
  * for, the update will be made in place. Otherwise, a new card will be added. */
 function displayQuote(quote) {
-    console.log('Received quote: ', quote);
-
     const lastRefreshedDate = currentDayAndTime();
-    console.log('Last refreshed date: ', lastRefreshedDate, displayedStocks);
     const refreshHandler = fetchDelayedQuote.bind(this, lastRefreshedDate, quote);
 
     if (!displayedStocks[quote.symbol]) {
@@ -170,7 +165,6 @@ function displayQuote(quote) {
         quoteParent.appendChild(quoteContainer);
         quotes.appendChild(quoteParent);
     } else {
-        console.log('update'        );
         /* Update the current entry. */
         const quoteCard = document.getElementById(idFromSymbol(quote.symbol));
         let quoteContainer = quoteCard.querySelector('.quote-container');
@@ -227,7 +221,6 @@ function watchQuote(quote) {
             bookmarkedStocks.symbols.push(symbol);
             bookmarkedStocks[symbol] = quote;
             showAlert(`Added ${symbol} to watch list.`, alertType.success);
-            console.log("Watched list: ", bookmarkedStocks);
         } else {
             showAlert(
                 `We were unable to add ${symbol} to your watch list. Please try again later.`, 
@@ -254,7 +247,6 @@ function configureWatchedCard(symbol) {
 
         return true;
     } catch(error) {
-        console.log("ERROR", error);
         return false;
     }
 }
@@ -266,7 +258,6 @@ function unwatchQuote(quote) {
             bookmarkedStocks.symbols = bookmarkedStocks.symbols.filter(symbol => symbol !== quote.symbol);
             delete bookmarkedStocks[symbol];
             showAlert(`Removed ${symbol} from watch list.`, alertType.success);
-            console.log("Watched list: ", bookmarkedStocks);
         } else {
             showAlert(
                 `We were unable to remove ${symbol} from your watch list. Please try again later.`,
@@ -305,11 +296,8 @@ function deleteQuote(quote) {
         displayedStocks.symbols = displayedStocks.symbols.filter(displayedSym => displayedSym !== symbol);
         delete displayedStocks[symbol];
 
-        console.log("displayed: ", displayedStocks);
-
         showAlert(`Deleted ${symbol} card.`, alertType.success);
     } catch (error) {
-        console.log("ERROR: ", error);
         showAlert(errorMessages.FAILED_REMOVAL, alertType.error);
     }
 }

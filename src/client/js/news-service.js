@@ -1,13 +1,40 @@
+import { currentDayAndTime } from './number-utils';
 
+let timeOfLastRequest;
+const requestLimit = 5000;
 
-export const findBreakingNews = async(query = 'amazon') => {
-        console.log('Finding breaking news');
-        const response = await fetch(`http://localhost:3000/allNews/${query}`);
-        const response2 = await fetch(`http://localhost:3000/breakingNews/${query}`);
+const errorMessages = {
+        FAILED_REQUEST: 'We were unable to fetch the news. Please try again.',
+        TOO_MANY_REFRESHES: 'You are checking the news too often. Please wait a few minutes then try again.'
 }
 
-export function findRecentNews(query) {
+export function findNews(query) {
+        getRecentNews(`http://localhost:3000/allNews/${query}`);
+}
 
+const getRecentNews = async(url = '', query = '') => {
+        const currentTime = Date.parse(currentDayAndTime());
+
+        if (timeOfLastRequest && currentTime - Date.parse(timeOfLastRequest) < requestLimit) {
+                showAlert(errorMessages.TOO_MANY_REQUESTS, alertType.warning);
+                return;
+        }
+
+        const response = await fetch(url);
+
+        try {
+                const newsData = await response.json();
+                if (newsData.statusCode !== 0) {
+                        throw newsData.errorMsg;
+                }
+                let news = [];
+                for (let article of newsData.responseData.articles) {
+                        news.push(article);
+                }
+                console.log("news: ", news);
+        } catch (error) {
+                showAlert(errorMessages.FAILED_REQUEST, alertType.error);
+        }
 }
 
 // TODO: send breaking news reports about the stocks in the investor's portfolio. 

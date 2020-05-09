@@ -1,7 +1,29 @@
+import { query } from "express";
+
 export const stockOps = {
     tickerSearch: 'TICKER',
     globalQuote: 'QUOTE'
 };
+
+/* Including these in the query will decrease the relevancy of returned articles. */
+const patterns = [ 
+    'co',
+    'com', 
+    'company', 
+    'corp',
+    'corporation',
+    'global',
+    'group',
+    'holding',
+    'inc', 
+    'incorporated', 
+    'limited',
+    'ltd',
+    'lp',
+    'plc',
+    'technologies',
+    'the'
+];
 
 function cleanKeys(rawData) {
     let cleanData = {};
@@ -43,4 +65,25 @@ export function parseSymbol(rawQuote, stockAction, symbolData) {
 
 export function idFromSymbol(symbol) {
     return symbol.replace(/\W/g, '');
+}
+
+export function meaningfulQuery(query) {
+    const queryFragments = query.split(/[ ,.]+/);
+    const queryArr = [];
+    queryFragments.forEach(queryFragment => {
+        const qf = queryFragment.toLowerCase();
+        if (!containsPatterns(qf, patterns) && qf.length > 1) {
+            queryArr.push(qf);
+        }
+    });
+    return queryArr.join(' AND ');
+}
+
+function containsPatterns(query, patterns) {
+    for (let pattern of patterns) {
+        if (query === pattern) {
+            return true;
+        }
+    }
+    return false;
 }
