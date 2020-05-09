@@ -33,7 +33,7 @@ const errorMessages = {
     TOO_MANY_REFRESHES: 'You are checking on this security too often. Please wait a few minutes then try again.'
 }
 
-const searchedQuotes = {
+const displayedStocks = {
     symbols: []
 };
 
@@ -154,11 +154,11 @@ function displayQuote(quote) {
     console.log('Received quote: ', quote);
 
     const lastRefreshedDate = currentDayAndTime();
-    console.log('Last refreshed date: ', lastRefreshedDate, searchedQuotes);
+    console.log('Last refreshed date: ', lastRefreshedDate, displayedStocks);
     const refreshHandler = fetchDelayedQuote.bind(this, lastRefreshedDate, quote);
 
-    if (!searchedQuotes[quote.symbol]) {
-        searchedQuotes.symbols.push(quote.symbol);
+    if (!displayedStocks[quote.symbol]) {
+        displayedStocks.symbols.push(quote.symbol);
 
         /* Create the parent containers. */
         let quoteParent = elementWithClasses('div', ['quote']);
@@ -178,7 +178,7 @@ function displayQuote(quote) {
         updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
     }
 
-    searchedQuotes[quote.symbol] = quote;
+    displayedStocks[quote.symbol] = quote;
 }
 
 function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler) {
@@ -301,8 +301,15 @@ function deleteQuote(quote) {
         const symbol = quote.symbol;
         const quoteCard = document.getElementById(idFromSymbol(symbol));
         quoteCard.remove();
+
+        displayedStocks.symbols = displayedStocks.symbols.filter(displayedSym => displayedSym !== symbol);
+        delete displayedStocks[symbol];
+
+        console.log("displayed: ", displayedStocks);
+
         showAlert(`Deleted ${symbol} card.`, alertType.success);
     } catch (error) {
+        console.log("ERROR: ", error);
         showAlert(errorMessages.FAILED_REMOVAL, alertType.error);
     }
 }
