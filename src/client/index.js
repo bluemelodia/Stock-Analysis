@@ -17,12 +17,13 @@ let overlay;
 
 let alertOverlay;
 let alertMessage;
-let alertButton;
+let closeAlertsButton;
 let alertPopup;
 
 let insightsOverlay;
 let insightsSymbol;
 let insightsName;
+let closeInsightsButton;
 
 const alertTimeout = 5 * 1000;
 const alertType = {
@@ -38,12 +39,13 @@ function init() {
 
     alertOverlay = document.querySelector('.alert');
     alertMessage = alertOverlay.querySelector('.alert-message');
-    alertButton = alertOverlay.querySelector('.alert-button');
+    closeAlertsButton = alertOverlay.querySelector('.alert-button');
     alertPopup = alertOverlay.querySelector('.alert-popup');
 
     insightsOverlay = document.querySelector('.insights');
-    insightsSymbol = document.querySelector('.symbol');
-    insightsName = document.querySelector('.name');
+    closeInsightsButton = insightsOverlay.querySelector('.close-button');
+    insightsSymbol = insightsOverlay.querySelector('.symbol');
+    insightsName = insightsOverlay.querySelector('.name');
 
     setupEventListeners();
 }
@@ -62,7 +64,8 @@ function setupEventListeners() {
         }
     });
     overlay.addEventListener('click', () => hideSearchOverlay());
-    alertButton.addEventListener('click', () => dismissAlert());
+    closeAlertsButton.addEventListener('click', () => dismissAlert());
+    closeInsightsButton.addEventListener('click', () => dismissInsights());
 }
 
 function showAlert(message, messageType) {
