@@ -11,7 +11,7 @@ $alert-max-width: 500px;
 .alert {
     @include absolute-overlay(
         $background: $dark-overlay-color, 
-        $z-index: $overlay-z-index + 2
+        $z-index: $overlay-z-index + 3
     );
 
     @include flex-center();
