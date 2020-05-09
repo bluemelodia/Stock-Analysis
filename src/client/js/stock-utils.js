@@ -1,5 +1,3 @@
-import { query } from "express";
-
 export const stockOps = {
     tickerSearch: 'TICKER',
     globalQuote: 'QUOTE'
