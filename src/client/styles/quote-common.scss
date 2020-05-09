@@ -1,0 +1,31 @@
+@import './app.scss';
+
+$quote-border: 2px solid $main-blue;
+
+@mixin quote-overview() {
+    @include card-padding();
+    @include flex-row($alignment: space-between);
+    border-bottom: $quote-border;
+    
+    & .quote-name {
+        @include flex-column($alignment: flex-start);
+    }
+}
+
+@mixin quote-actions() {
+    @include for-size(small) {
+        @include flex-row($alignment: flex-end);
+        padding-top: $small-padding;
+    }
+}
+
+@mixin quote-footer() {
+    @include flex-row($alignment: space-between);
+
+    padding-top: $small-padding * 2;
+    padding-bottom: $small-padding;
+
+    & .refresh-button {
+        @include background-free-button();
+    }
+}

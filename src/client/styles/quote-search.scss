@@ -1,4 +1,5 @@
 @import './app.scss';
+@import './quote-common.scss';
 
 /* Heights and widths. */
 $full-width: 100%;
@@ -41,29 +42,10 @@ $quote-card-border: 2px solid $search-bar-blue;
     flex-wrap: wrap;
 }
 
-@mixin search-padding {
-    padding-top: $small-padding;
-    padding-bottom: $small-padding;
-    padding-left: $large-padding;
-    padding-right: $large-padding;
-}
-
 @mixin search-focus {
     outline: none;
     border: $search-focus-blue-border;
     border-bottom: none;
-}
-
-@mixin card {
-    margin: $small-margin;
-    border: $quote-card-border;
-    width: $full-width;
-    max-width: $card-max-width;
-}
-
-@mixin card-padding {
-    padding-top: $small-padding;
-    padding-bottom: $small-padding;
 }
 
 /* Cross-browser support for calculated max-height. */
@@ -75,7 +57,7 @@ $quote-card-border: 2px solid $search-bar-blue;
 }
 
 #search-input {
-    @include search-padding();
+    @include container-padding();
     @include qualified-full-width();
 
     font-size: $large-font;
@@ -157,7 +139,7 @@ $quote-card-border: 2px solid $search-bar-blue;
 }
 
 .search-prompt-container, .no-results-container {
-    @include search-padding();
+    @include container-padding();
     @include flex-center();
 
     height: $full-height;
@@ -168,7 +150,7 @@ $quote-card-border: 2px solid $search-bar-blue;
 }
 
 .security {
-    @include search-padding();
+    @include container-padding();
     @include flex-center();
 
     @include for-size(small) {
@@ -212,26 +194,17 @@ $quote-card-border: 2px solid $search-bar-blue;
 /* Quote card. */
 .quote {
     @include card();
-    @include search-padding();
+    @include container-padding();
 
     & .quote-overview {
-        @include card-padding();
-        @include flex-row($alignment: space-between);
-        border-bottom: $quote-card-border;
-
+        @include quote-overview();
+           
         @include for-size(small) {
             flex-direction: column;
         }
 
-        & .quote-name {
-            @include flex-column($alignment: flex-start);
-        }
-
         & .quote-actions {
-            @include for-size(small) {
-                @include flex-row($alignment: flex-end);
-                padding-top: $small-padding;
-            }
+            @include quote-actions();
 
             & button {
                 padding-left: $small-padding;
@@ -289,14 +262,7 @@ $quote-card-border: 2px solid $search-bar-blue;
     }
 
     & .quote-footer {
-        @include flex-row($alignment: space-between);
-
-        padding-top: $small-padding * 2;
-        padding-bottom: $small-padding;
-
-        & .refresh-button {
-            @include background-free-button();
-        }
+        @include quote-footer();
     }
 }
 

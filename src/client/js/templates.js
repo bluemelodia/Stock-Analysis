@@ -22,7 +22,7 @@ export const quoteIcon = `<i class='fa fa-refresh' style='font-size:24px'></i>`;
 const watchIcon = `<i class="fa fa-eye" style="font-size:24px"></i>`;
 const unwatchIcon = `<i class="fa fa-eye-slash" style="font-size:24px"></i>`;
 const analysisIcon = `<i class="fa fa-line-chart" style="font-size:24px"></i>`;
-const deleteIcon = `<i class="fa fa-close" style="font-size:24px"></i>`;
+const deleteIcon = `<i class="fa fa-trash" style="font-size:24px"></i>`;
 
 export function elementWithClasses(element = 'div', classes = []) {
     let div = document.createElement(element);

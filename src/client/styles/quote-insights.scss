@@ -1,4 +1,10 @@
 @import './app.scss';
+@import './quote-common.scss';
+
+$quote-insights-border: 2px solid $main-blue;
+
+$quote-desktop-width: 85%;
+$quote-mobile-width: 100%;
 
 .insights {
     @include absolute-overlay(
@@ -9,10 +15,40 @@
     @include flex-center();
 
     & .quote-insights {
-        background: $alert-message-background;
-        border: $alert-message-border;
-        color: $light-color;
+        background: $light-color;
+        border: $quote-insights-border;
         padding: $large-padding;
-        width: 50%;
+
+        width: $quote-desktop-width;
+        height: $quote-desktop-width;
+
+        @include for-size(small) {
+            width: $quote-mobile-width;
+            height: $quote-mobile-width;
+        }
+
+        & .quote-overview {        
+            @include quote-overview();
+            
+            & .quote-actions {
+                @include quote-actions();
+    
+                & button {
+                    padding-left: $small-padding;
+    
+                    &.close-button {
+                        @include background-free-button();
+                    }
+                }
+            }
+        
+            & .type {
+                text-align: left;
+            }
+        }
+
+        & .quote-footer {
+            @include quote-footer();
+        }
     }
 }

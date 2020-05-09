@@ -8,7 +8,7 @@ import {
     quoteIcon,
     searchPrompt 
 } from './templates';
-import { showAlert, alertType } from '../index'
+import { alertType, showAlert, showInsights } from '../index'
 
 const overlay = document.querySelector('.search-overlay');
 const searchInput = document.getElementById('search-input');
@@ -183,7 +183,7 @@ function displayQuote(quote) {
 
 function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler) {
        const isWatching = isWatchedQuote(quote.symbol);
-       const insightsHandler = showQuoteInsights.bind(null, quote.symbol);
+       const insightsHandler = showQuoteInsights.bind(null, quote);
        const watchHandler = watchQuote.bind(null, quote);
        const unwatchHandler = unwatchQuote.bind(null, quote);
        const deleteHandler = deleteQuote.bind(null, quote);
@@ -315,5 +315,5 @@ function deleteQuote(quote) {
 }
 
 function showQuoteInsights(quote) {
-    console.log("Show insights for: ", quote);
+    showInsights(quote.symbol, quote.name);
 }

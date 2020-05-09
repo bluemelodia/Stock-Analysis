@@ -76,6 +76,27 @@ $accents-red: #ff7675;
     color: $color;
 }
 
+/* Shared card styles. */
+
+@mixin container-padding {
+    padding-top: $small-padding;
+    padding-bottom: $small-padding;
+    padding-left: $large-padding;
+    padding-right: $large-padding;
+}
+
+@mixin card {
+    margin: $small-margin;
+    border: $quote-card-border;
+    width: $full-width;
+    max-width: $card-max-width;
+}
+
+@mixin card-padding {
+    padding-top: $small-padding;
+    padding-bottom: $small-padding;
+}
+
 /* Media queries. */
 @mixin for-size($size) {
     @if $size == small {

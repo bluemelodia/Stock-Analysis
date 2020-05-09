@@ -6,16 +6,23 @@ import {
 } from './js/stock-service';
 import './styles/app.scss';
 import './styles/alert.scss';
+import './styles/quote-common.scss';
+import './styles/quote-insights.scss';
 import './styles/quote-search.scss';
+
 
 let searchButton;
 let searchInput;
 let overlay;
 
-let alert;
+let alertOverlay;
 let alertMessage;
 let alertButton;
 let alertPopup;
+
+let insightsOverlay;
+let insightsSymbol;
+let insightsName;
 
 const alertTimeout = 5 * 1000;
 const alertType = {
@@ -28,10 +35,15 @@ function init() {
     searchButton = document.getElementById('search-button');
     searchInput = document.getElementById('search-input'); 
     overlay = document.querySelector('.search-overlay');
-    alert = document.querySelector('.alert');
-    alertMessage = alert.querySelector('.alert-message');
-    alertButton = alert.querySelector('.alert-button');
-    alertPopup = alert.querySelector('.alert-popup');
+
+    alertOverlay = document.querySelector('.alert');
+    alertMessage = alertOverlay.querySelector('.alert-message');
+    alertButton = alertOverlay.querySelector('.alert-button');
+    alertPopup = alertOverlay.querySelector('.alert-popup');
+
+    insightsOverlay = document.querySelector('.insights');
+    insightsSymbol = document.querySelector('.symbol');
+    insightsName = document.querySelector('.name');
 
     setupEventListeners();
 }
@@ -55,7 +67,7 @@ function setupEventListeners() {
 
 function showAlert(message, messageType) {
     alertMessage.innerHTML = message;
-    alert.classList.remove('hidden');
+    alertOverlay.classList.remove('hidden');
     alertPopup.classList.remove('error', 'success', 'warning');
 
     if (messageType === alertType.error) {
@@ -73,11 +85,25 @@ function showAlert(message, messageType) {
 
 function dismissAlert() {
     alertMessage.innerHTML = '';
-    alert.classList.add('hidden');
+    alertOverlay.classList.add('hidden');
+}
+
+function showInsights(symbol, name) {
+    insightsOverlay.classList.remove('hidden');
+    insightsSymbol.innerHTML = symbol;
+    insightsName.innerHTML = name;
+}
+
+function dismissInsights() {
+    insightsOverlay.classList.add('hidden');
+    insightsSymbol.innerHTML = '';
+    insightsName.innerHTML = '';
 }
 
 export {
     init,
     showAlert,
-    alertType
+    alertType,
+    showInsights,
+    dismissInsights
 };
