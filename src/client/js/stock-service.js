@@ -27,6 +27,7 @@ const fetchLimit = 15 * 60 * 1000;
 const errorMessages = {
     ADD_EXISTING: 'This security is on your watch list.',
     REMOVE_NONEXISTING: 'This security is not currently on your watch list.', 
+    FAILED_REMOVAL: 'We were unable to delete this card. Please try again.',
     FAILED_REQUEST: 'We were unable to complete your request. Please try again.',
     TOO_MANY_REQUESTS: 'You are making too many requests in a short period of time. Please wait a few seconds then try again.',
     TOO_MANY_REFRESHES: 'You are checking on this security too often. Please wait a few minutes then try again.'
@@ -296,7 +297,14 @@ function configureUnwatchedCard(symbol) {
 }
 
 function deleteQuote(quote) {
-
+    try {
+        const symbol = quote.symbol;
+        const quoteCard = document.getElementById(idFromSymbol(symbol));
+        quoteCard.remove();
+        showAlert(`Deleted ${symbol} card.`, alertType.success);
+    } catch (error) {
+        showAlert(errorMessages.FAILED_REMOVAL, alertType.error);
+    }
 }
 
 function showQuoteInsights(quote) {
