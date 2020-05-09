@@ -16,3 +16,4 @@ export function findRecentNews(query) {
 // TODO: the database only really needs the list of symbols. 
 // TODO: add loadmasks
 // TODO: there's an issue where the alert is shown for a very short time after being shown the first time.
+// TODO: when using symbol ID remove all non-alphanumeric characters*

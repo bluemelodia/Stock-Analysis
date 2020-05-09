@@ -1,4 +1,4 @@
-import { parseSymbol, stockOps } from './stock-utils';
+import { parseSymbol, idFromSymbol, stockOps } from './stock-utils';
 import { currentDayAndTime } from './number-utils';
 import { 
     createQuoteBody, 
@@ -161,7 +161,7 @@ function displayQuote(quote) {
 
         /* Create the parent containers. */
         let quoteParent = elementWithClasses('div', ['quote']);
-        quoteParent.id = quote.symbol;
+        quoteParent.id = idFromSymbol(quote.symbol);
 
         let quoteContainer = elementWithClasses('div', ['quote-container']); 
         updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
@@ -171,7 +171,7 @@ function displayQuote(quote) {
     } else {
         console.log('update'        );
         /* Update the current entry. */
-        const quoteCard = document.getElementById(quote.symbol);
+        const quoteCard = document.getElementById(idFromSymbol(quote.symbol));
         let quoteContainer = quoteCard.querySelector('.quote-container');
         quoteContainer.innerHTML = '';
         updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshHandler);
@@ -239,7 +239,7 @@ function watchQuote(quote) {
 }
 
 function configureWatchedCard(symbol) {
-    const quoteCard = document.getElementById(symbol);
+    const quoteCard = document.getElementById(idFromSymbol(symbol));
 
     try {
         let watchButton = quoteCard.querySelector('.watch-quote');
@@ -278,7 +278,7 @@ function unwatchQuote(quote) {
 }
 
 function configureUnwatchedCard(symbol) {
-    const quoteCard = document.getElementById(symbol);
+    const quoteCard = document.getElementById(idFromSymbol(symbol));
     try {
         let watchButton = quoteCard.querySelector('.watch-quote');
         watchButton.classList.remove('hidden');

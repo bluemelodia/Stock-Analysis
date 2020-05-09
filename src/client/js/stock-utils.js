@@ -40,3 +40,7 @@ export function parseSymbol(rawQuote, stockAction, symbolData) {
         return quote;
     }
 }
+
+export function idFromSymbol(symbol) {
+    return symbol.replace(/\W/g, '');
+}
