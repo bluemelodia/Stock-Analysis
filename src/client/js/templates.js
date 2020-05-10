@@ -137,7 +137,7 @@ function createArticleBody(article) {
     return `
         <div class="article-body">
             <div class="article-overview">
-                <div class="title">${article.title}</div>
+                <a href="${article.url}" target="_blank" class="title">${article.title}</a>
                 <div class="article-source">
                     <div class="source">${article.source || ''}</div>
                     <div class="author">${article.author || ''}</div>
@@ -145,7 +145,7 @@ function createArticleBody(article) {
             </div>
             <div class="article-details">
                 <div class="article-description">
-                    ${article.description}
+                    ${article.description || 'No description available.' }
                 </div>
             </div>
         </div>

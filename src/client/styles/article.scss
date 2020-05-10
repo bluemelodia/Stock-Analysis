@@ -12,7 +12,7 @@ $article-header-border: 2px solid $accents-blue;
         flex-direction: column;
     }
 
-    &.breaking-news {
+    &.breaking-news, &:hover {
         background-color: $accents-gray;
     }
 
@@ -28,6 +28,8 @@ $article-header-border: 2px solid $accents-blue;
     
             & .title {
                 font-weight: $font-weight-bold;
+                text-decoration: none;
+                color: $main-blue;
             }
     
             & .article-source {

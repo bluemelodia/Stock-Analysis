@@ -9,6 +9,10 @@ import {
     findNews
 } from './js/news-service';
 
+import {
+    getTrends
+} from './js/analysis-service';
+
 import './styles/app.scss';
 import './styles/alert.scss';
 import './styles/article.scss';
@@ -123,6 +127,7 @@ function showInsights(symbol, name) {
     insightsName.innerHTML = name;
 
     findNews(symbol, name);
+    getTrends(symbol, name);
 }
 
 function dismissInsights() {

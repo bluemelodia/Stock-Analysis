@@ -18,6 +18,7 @@ Features:
 
         Detailed Insights:
                 - Users can view a news feed containing breaking and recent (past three days) news about the security. 
+                - Each security's news feed can be refreshed every 15 minutes.
 
         To Implement:
                 - Watched securities will be persisted across user sessions.
