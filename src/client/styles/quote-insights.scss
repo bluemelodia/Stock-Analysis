@@ -91,7 +91,9 @@ $quote-max-width: 850px;
 
         & .quote-footer {
             @include quote-footer();
+
             flex-shrink: 0;
+            padding-bottom: 0;
         }
     }
 }

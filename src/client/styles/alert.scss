@@ -5,6 +5,7 @@ $alert-message-border: 2px solid $accents-blue;
 $alert-error-border: 2px solid $accents-red;
 $alert-warning-border: 2px solid $accents-orange;
 $alert-success-border: 2px solid $accents-green;
+$alert-info-border: 2px solid $accents-blue;
 
 $alert-max-width: 500px;
 
@@ -40,6 +41,11 @@ $alert-max-width: 500px;
         &.error {
             background: $main-red;
             border: $alert-error-border;
+        }
+
+        &.info {
+            background: $main-blue;
+            border: $alert-info-border;
         }
 
         & .alert-header {

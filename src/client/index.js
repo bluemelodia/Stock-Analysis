@@ -41,7 +41,8 @@ const alertTimeout = 5 * 1000;
 const alertType = {
     success: 'SUCCESS',
     warning: 'WARNING', 
-    error: 'ERROR'
+    error: 'ERROR',
+    info: 'INFO'
 }
 
 function init() {
@@ -93,14 +94,16 @@ function setupEventListeners() {
 function showAlert(message, messageType) {
     alertMessage.innerHTML = message;
     alertOverlay.classList.remove('hidden');
-    alertPopup.classList.remove('error', 'success', 'warning');
+    alertPopup.classList.remove('error', 'success', 'warning', 'info');
 
     if (messageType === alertType.error) {
         alertPopup.classList.add('error');
     } else if (messageType === alertType.success) {
         alertPopup.classList.add('success');
-    } else {
+    } else if (messageType === alertType.warning) {
         alertPopup.classList.add('warning');
+    } else {
+        alertPopup.classList.add('info');
     }
 
     setTimeout(() => {

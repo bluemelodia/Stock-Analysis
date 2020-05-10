@@ -5,25 +5,35 @@ import { createArticle, elementWithClasses } from './templates';
 
 const insights = document.querySelector('.quote-insights');
 const newsPanel = insights.querySelector('.quote-news');
+const lastRefreshed = insights.querySelector('.last-refreshed');
+const refreshButton = insights.querySelector('.refresh-button');
+let refreshListener;
 
 let timeOfLastRequest;
 const requestLimit = 15000;
+const fetchLimit = 25000;
+
+const cache = {
+        symbols: []
+}
 
 // TODO: cache articles & last refreshed date for each.
 
 const errorMessages = {
         FAILED_REQUEST: 'We were unable to fetch the news. Please try again.',
-        TOO_MANY_REQUESTS: 'You are making too many requests in a short period of time. Please wait a few seconds then try again.',
-        TOO_MANY_REFRESHES: 'You are checking the news too often. Please wait a few minutes then try again.'
+        FETCH_CACHED: 'As you recently fetched insights for this security, a cached version of the data will be displayed.',
 }
 
 export async function findNews(symbol, name) {
         const currentTime = Date.parse(currentDayAndTime());
-
-        if (timeOfLastRequest && currentTime - Date.parse(timeOfLastRequest) < requestLimit) {
-                console.log("Showing alert:");
-                showAlert(errorMessages.TOO_MANY_REQUESTS, alertType.warning);
-                return;
+        /* Check if a recent request was made for this symbol. */
+        if (cache[symbol]) {
+                const cachedSymbol = cache[symbol];
+                if (currentTime - Date.parse(cachedSymbol.lastRefresh) < fetchLimit) {
+                        showAlert(errorMessages.FETCH_CACHED, alertType.info);
+                        displayNews(cachedSymbol.breakingNews, cachedSymbol.allNews);
+                        return;
+                }
         }
         
         const everythingQuery = `+(${symbol} OR (${advancedQuery(name, ' AND ')}))`;
@@ -34,7 +44,28 @@ export async function findNews(symbol, name) {
 
         console.log("Breaking news: ", breakingNews);
         console.log("All news: ", allNews);
-        timeOfLastRequest = currentDayAndTime();
+
+        /* Refresh the footer. */
+        const lastRefreshedDate = currentDayAndTime();
+        timeOfLastRequest = lastRefreshedDate;
+        lastRefreshed.innerHTML = `Last refreshed: ${lastRefreshedDate}`;
+
+        /* Remove the previous event listener. */
+        if (refreshListener) {
+                refreshButton.removeEventListener('click', refreshListener);
+        }
+
+        refreshListener = findNews.bind(this, symbol, name, lastRefreshedDate);
+        refreshButton.addEventListener('click', refreshListener);
+
+        /* Cache the symbol, updating the last refreshed date. */
+        cache.symbols.push(symbol);
+        cache[symbol] = {
+                lastRefresh: lastRefreshedDate,
+                breakingNews: breakingNews,
+                allNews: allNews
+        };
+
         displayNews(breakingNews, allNews);
 }
 
@@ -94,6 +125,4 @@ function displayNews(breakingNews, allNews) {
 
 // TODO: add loadmasks
 // TODO: there's an issue where the alert is shown for a very short time after being shown the first time.
-// TODO: don't allow users to query for the news too often (once 15 mins per sec)
-// TODO: let users tab between news & sentiment
 // TODO: call Aylien API
