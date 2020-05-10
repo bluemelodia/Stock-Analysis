@@ -9,15 +9,10 @@ const lastRefreshed = insights.querySelector('.last-refreshed');
 const refreshButton = insights.querySelector('.refresh-button');
 let refreshListener;
 
-let timeOfLastRequest;
-const requestLimit = 15000;
-const fetchLimit = 25000;
+const fetchLimit = 15 * 60 * 1000;
 
-const cache = {
-        symbols: []
-}
-
-// TODO: cache articles & last refreshed date for each.
+/* Unlike with symbol search, this cache will not be cleared. */
+const cache = {};
 
 const errorMessages = {
         FAILED_REQUEST: 'We were unable to fetch the news. Please try again.',
@@ -27,6 +22,7 @@ const errorMessages = {
 export async function findNews(symbol, name) {
         const currentTime = Date.parse(currentDayAndTime());
         /* Check if a recent request was made for this symbol. */
+        console.log("CACHE: ", cache);
         if (cache[symbol]) {
                 const cachedSymbol = cache[symbol];
                 if (currentTime - Date.parse(cachedSymbol.lastRefresh) < fetchLimit) {
@@ -47,7 +43,6 @@ export async function findNews(symbol, name) {
 
         /* Refresh the footer. */
         const lastRefreshedDate = currentDayAndTime();
-        timeOfLastRequest = lastRefreshedDate;
         lastRefreshed.innerHTML = `Last refreshed: ${lastRefreshedDate}`;
 
         /* Remove the previous event listener. */
@@ -59,7 +54,6 @@ export async function findNews(symbol, name) {
         refreshButton.addEventListener('click', refreshListener);
 
         /* Cache the symbol, updating the last refreshed date. */
-        cache.symbols.push(symbol);
         cache[symbol] = {
                 lastRefresh: lastRefreshedDate,
                 breakingNews: breakingNews,
@@ -121,6 +115,7 @@ function displayNews(breakingNews, allNews) {
         }
 
         newsPanel.appendChild(newsContainer);
+        newsPanel.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 // TODO: add loadmasks
