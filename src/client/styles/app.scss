@@ -31,6 +31,11 @@ $accents-red: #ff7675;
     padding: 0;
 }
 
+/* Fonts. */
+$large-font: 105%;
+$large-line-height: 28px;
+$font-weight-bold: 600;
+
 /* Shared flex mixins. */
 @mixin flex-center {
     display: flex;
@@ -95,6 +100,11 @@ $accents-red: #ff7675;
 @mixin card-padding {
     padding-top: $small-padding;
     padding-bottom: $small-padding;
+}
+
+@mixin card-margin {
+    margin-top: $small-margin;
+    margin-bottom: $small-margin;
 }
 
 /* Media queries. */

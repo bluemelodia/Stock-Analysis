@@ -5,18 +5,16 @@ import {
     wipeOldResults 
 } from './js/stock-service';
 
-import { meaningfulQuery } from './js/stock-utils';
-
 import { 
     findNews
 } from './js/news-service';
 
 import './styles/app.scss';
 import './styles/alert.scss';
+import './styles/article.scss';
 import './styles/quote-common.scss';
 import './styles/quote-insights.scss';
 import './styles/quote-search.scss';
-
 
 let searchButton;
 let searchInput;

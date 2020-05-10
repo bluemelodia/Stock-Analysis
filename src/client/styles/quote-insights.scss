@@ -16,6 +16,9 @@ $quote-max-width: 750px;
     @include flex-center();
 
     & .quote-insights {
+        display: flex;
+        flex-direction: column;
+
         background: $light-color;
         border: $quote-insights-border;
         padding: $large-padding;
@@ -34,6 +37,8 @@ $quote-max-width: 750px;
             @include for-size(small) {
                 align-items: flex-start;
             }
+
+            flex-shrink: 0;
             
             & .quote-actions {
                 @include quote-actions();
@@ -52,8 +57,19 @@ $quote-max-width: 750px;
             }
         }
 
+        & .quote-details {
+            display: flex;
+
+            & .quote-news {
+                @include card-margin();
+
+                overflow-y: scroll;
+            }
+        }
+
         & .quote-footer {
             @include quote-footer();
+            flex-shrink: 0;
         }
     }
 }

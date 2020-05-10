@@ -1,0 +1,31 @@
+@import './app.scss';
+
+$article-img-max-width: 450px;
+$article-header-border: 2px solid $accents-blue;
+
+.article {
+    @include flex-center();
+
+    & .article-overview {
+        @include card-padding();
+
+        border-bottom: $article-header-border;
+
+        & .title {
+            line-height: $large-line-height;
+            font-weight: $font-weight-bold;
+        }
+
+        & .article-source {
+            @include flex-row($alignment: space-between);
+        }
+    }
+
+    & .article-img {
+        max-width: $article-img-max-width;
+
+        & img {
+            width: 100%;
+        }
+    }
+}
