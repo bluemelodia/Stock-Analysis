@@ -67,7 +67,7 @@ $font-weight-bold: 600;
                         $right: 0, 
                         $bottom: 0, 
                         $z-index: $overlay-z-index) {
-    position: absolute;
+    position: fixed;
     top: $top;
     left: $left;
     right: $right;

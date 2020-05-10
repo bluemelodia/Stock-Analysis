@@ -40,7 +40,6 @@ $quote-card-border: 2px solid $search-bar-blue;
 @mixin search-focus {
     outline: none;
     border: $search-focus-blue-border;
-    border-bottom: none;
 }
 
 /* Cross-browser support for calculated max-height. */
@@ -99,6 +98,9 @@ $quote-card-border: 2px solid $search-bar-blue;
     @include qualified-full-width();
 
     z-index: $overlay-z-index + 1;
+
+    position: fixed; 
+    top: 0;
 }
 
 .search-overlay {
@@ -184,6 +186,7 @@ $quote-card-border: 2px solid $search-bar-blue;
     @include flex-wrap-row();
     @include max-quote-height();
     overflow-y: scroll;
+    margin-top: $search-bar-height;
 }
 
 /* Quote card. */
