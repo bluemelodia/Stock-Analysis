@@ -28,6 +28,13 @@ let alertPopup;
 let insightsOverlay;
 let insightsSymbol;
 let insightsName;
+
+let newsTab;
+let newsPanel;
+let sentimentTab;
+let sentimentPanel;
+let tabs = [];
+
 let closeInsightsButton;
 
 const alertTimeout = 5 * 1000;
@@ -52,6 +59,13 @@ function init() {
     insightsSymbol = insightsOverlay.querySelector('.symbol');
     insightsName = insightsOverlay.querySelector('.name');
 
+    newsTab = insightsOverlay.querySelector('.news');
+    sentimentTab = insightsOverlay.querySelector('.sentiment');
+    newsPanel = insightsOverlay.querySelector('.quote-news');
+    sentimentPanel = insightsOverlay.querySelector('.quote-sentiment');
+    tabs.push({ tab: newsTab, panel: newsPanel });
+    tabs.push({ tab: sentimentTab, panel: sentimentPanel });
+
     setupEventListeners();
 }
 
@@ -71,6 +85,9 @@ function setupEventListeners() {
     overlay.addEventListener('click', () => hideSearchOverlay());
     closeAlertsButton.addEventListener('click', () => dismissAlert());
     closeInsightsButton.addEventListener('click', () => dismissInsights());
+
+    newsTab.addEventListener('click', () => switchTabs(newsTab));
+    sentimentTab.addEventListener('click', () => switchTabs(sentimentTab));
 }
 
 function showAlert(message, messageType) {
@@ -108,6 +125,18 @@ function dismissInsights() {
     insightsOverlay.classList.add('hidden');
     insightsSymbol.innerHTML = '';
     insightsName.innerHTML = '';
+}
+
+function switchTabs(selectedTab) {
+    tabs.forEach(tab => {
+        if (tab.tab === selectedTab) {
+            tab.tab.classList.add('selected');
+            tab.panel.classList.remove('hidden');
+        } else {
+            tab.tab.classList.remove('selected');
+            tab.panel.classList.add('hidden');
+        }
+    });
 }
 
 export {

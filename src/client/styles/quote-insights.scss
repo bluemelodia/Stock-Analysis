@@ -76,6 +76,16 @@ $quote-max-width: 850px;
 
             & .quote-news {
                 overflow-y: scroll;
+
+                &.hidden { 
+                    display: none;
+                }
+            }
+
+            & .quote-sentiment {
+                &.hidden { 
+                    display: none;
+                }
             }
         }
 
