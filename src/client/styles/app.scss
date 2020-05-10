@@ -12,6 +12,8 @@ $breakpoint-small-device: 500px;
 /* Colors. */
 $light-color: #fff;
 $dark-overlay-color: #636e729a;
+$accents-gray: #dfe6e9;
+
 $main-blue: #0984e3;
 $accents-blue: #74b9ff;
 
@@ -105,6 +107,13 @@ $font-weight-bold: 600;
 @mixin card-margin {
     margin-top: $small-margin;
     margin-bottom: $small-margin;
+}
+
+@mixin line-with-ellipsis($max-width) {
+    max-width: $max-width;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 /* Media queries. */

@@ -1,31 +1,45 @@
 @import './app.scss';
 
-$article-img-max-width: 450px;
+$article-title-max-width: 450px;
+$article-body-width: percentage($number: 0.75);
+$article-img-width: percentage($number: 1) - $article-body-width;
 $article-header-border: 2px solid $accents-blue;
 
 .article {
-    @include flex-center();
+    @include flex-row($alignment: space-between);
 
-    & .article-overview {
-        @include card-padding();
+    &.breaking-news {
+        background-color: $accents-gray;
+    }
 
-        border-bottom: $article-header-border;
+    & .article-body {
+        width: $article-body-width;
+        margin: $small-margin;
 
-        & .title {
-            line-height: $large-line-height;
-            font-weight: $font-weight-bold;
-        }
-
-        & .article-source {
-            @include flex-row($alignment: space-between);
+        & .article-overview {
+            @include card-padding();
+    
+            border-bottom: $article-header-border;
+            margin-bottom: $small-margin;
+    
+            & .title {
+                font-weight: $font-weight-bold;
+            }
+    
+            & .article-source {
+                @include flex-row($alignment: space-between);
+            }
         }
     }
 
     & .article-img {
-        max-width: $article-img-max-width;
+        width: $article-img-width;
+        margin: $small-margin;
+        align-self: flex-start;
 
         & img {
             width: 100%;
+            
         }
     }
 }

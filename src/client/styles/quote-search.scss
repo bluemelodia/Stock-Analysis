@@ -201,8 +201,9 @@ $quote-card-border: 2px solid $search-bar-blue;
         }
 
         & .quote-name {
+            /* Ensure the cards are the same height. */
             & .name {
-                max-width: $company-name-max-width;
+                @include line-with-ellipsis($max-width: $company-name-max-width);
             }
         }
 

@@ -70,15 +70,22 @@ function displayNews(breakingNews, allNews) {
 
         if (breakingNews && breakingNews.news) {
                 breakingNews.news.forEach(article => {
-                        const breakingArticle = createArticle(article, true);
-                        newsContainer.appendChild(breakingArticle);
+                        /* Don't need to use the articles w/o description and 
+                         * content, as the sentiment analysis API won't be able
+                         * to get much information from it. */
+                        if (article.description || article.content) {
+                                const breakingArticle = createArticle(article, true);
+                                newsContainer.appendChild(breakingArticle);
+                        }
                 });
         }  
 
         if (allNews && allNews.news) {
                 allNews.news.forEach(article => {
-                        const normalArticle = createArticle(article);
-                        newsContainer.appendChild(normalArticle);
+                        if (article.description || article.content) {
+                                const normalArticle = createArticle(article);
+                                newsContainer.appendChild(normalArticle);
+                        }
                 });
         }
 

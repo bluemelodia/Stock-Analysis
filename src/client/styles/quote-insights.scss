@@ -7,6 +7,8 @@ $quote-desktop-width: 85%;
 $quote-mobile-width: 100%;
 $quote-max-width: 750px;
 
+$quote-news-height: 50%;
+
 .insights {
     @include absolute-overlay(
         $background: $dark-overlay-color, 
@@ -63,6 +65,7 @@ $quote-max-width: 750px;
             & .quote-news {
                 @include card-margin();
 
+                height: $quote-news-height;
                 overflow-y: scroll;
             }
         }
