@@ -16,6 +16,9 @@ Features:
         Watching Securities: 
                 - Users can clear recently searched securities, as well as add and un-watch securities of their choice. 
 
+        Detailed Insights:
+                - Users can view a news feed containing breaking and recent (past three days) news about the security. 
+
         To Implement:
                 - Watched securities will be persisted across user sessions.
                 - Users can view detailed insights about each security, including a  news feed and sentiment analysis on the security.

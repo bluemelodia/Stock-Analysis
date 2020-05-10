@@ -94,4 +94,6 @@ function displayNews(breakingNews, allNews) {
 
 // TODO: add loadmasks
 // TODO: there's an issue where the alert is shown for a very short time after being shown the first time.
-// TODO: don't show null for images, etc. 
+// TODO: don't allow users to query for the news too often (once 15 mins per sec)
+// TODO: let users tab between news & sentiment
+// TODO: call Aylien API
