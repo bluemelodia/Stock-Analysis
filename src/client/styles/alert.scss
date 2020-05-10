@@ -28,6 +28,10 @@ $alert-max-width: 500px;
         width: 50%;
         max-width: 500px; 
 
+        @include for-size(small) {
+            width: 75%;
+        }
+
         &.success {
             background: $main-green;
             border: $alert-success-border;
@@ -50,7 +54,7 @@ $alert-max-width: 500px;
 
         & .alert-header {
             @include flex-row($alignment: flex-end);
-            width: 100%;
+            width: $full-width;
 
             & .alert-button {
                 @include background-free-button($color: $light-color);

@@ -40,7 +40,20 @@ module.exports = merge(common, {
             {
                 /* Handle both sass and css files. */
                 test:/\.(s*)css$/,
-                use: [ MiniCSSExtractPlugin.loader, 'css-loader', 'sass-loader' ]
+                use: [ 
+                    MiniCSSExtractPlugin.loader, 
+                    'css-loader', 
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            sourceMap: true,
+                            config: {
+                                path: 'postcss.config.js'
+                            }
+                        }
+                    },
+                    'sass-loader' 
+                ]
             }
         ]
     },

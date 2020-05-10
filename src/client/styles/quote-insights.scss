@@ -3,9 +3,11 @@
 
 $quote-insights-border: 2px solid $main-blue;
 
-$quote-desktop-width: 90%;
-$quote-mobile-width: 100%;
+$quote-mobile-width: $full-width;
 $quote-max-width: 850px;
+
+$quote-details-height: 80%;
+$quote-details-max-height: 600px;
 
 .insights {
     @include absolute-overlay(
@@ -16,14 +18,10 @@ $quote-max-width: 850px;
     @include flex-center();
 
     & .quote-insights {
-        @include flex-column($alignment: stretch);
-
         background: $light-color;
         border: $quote-insights-border;
         padding: $large-padding;
 
-        width: $quote-desktop-width;
-        height: $quote-desktop-width;
         max-width: $quote-max-width;
 
         @include for-size(small) {
@@ -59,6 +57,9 @@ $quote-max-width: 850px;
         & .quote-details {
             @include flex-column($alignment: flex-start);
 
+            height: $quote-details-height;
+            max-height: $quote-details-max-height;
+
             & .quote-panel {
                 display: flex;
                 flex-shrink: 0;
@@ -76,6 +77,11 @@ $quote-max-width: 850px;
 
             & .quote-news {
                 overflow-y: scroll;
+
+                /* Avoid content going right up against the scrollbar. */
+                @include for-size(small) {
+                    padding-right: $large-padding;
+                }
 
                 &.hidden { 
                     display: none;

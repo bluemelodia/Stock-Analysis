@@ -115,6 +115,8 @@ function displayNews(breakingNews, allNews) {
         }
 
         newsPanel.appendChild(newsContainer);
+
+        /* Scroll back to the top. */
         newsPanel.scrollTo({top: 0, behavior: 'smooth'});
 }
 

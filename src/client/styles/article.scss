@@ -1,12 +1,16 @@
 @import './app.scss';
 
 $article-title-max-width: 450px;
-$article-body-width: 100%;
+$article-body-width: $full-width;
 $article-img-width: 25%;
 $article-header-border: 2px solid $accents-blue;
 
 .article {
     @include flex-row($alignment: space-between);
+
+    @include for-size(small) {
+        flex-direction: column;
+    }
 
     &.breaking-news {
         background-color: $accents-gray;
@@ -28,6 +32,10 @@ $article-header-border: 2px solid $accents-blue;
     
             & .article-source {
                 @include flex-row($alignment: space-between);
+
+                @include for-size(small) {
+                    flex-direction: column;
+                }
             }
         }
 
@@ -45,9 +53,12 @@ $article-header-border: 2px solid $accents-blue;
         margin: $small-margin;
         align-self: center;
 
+        @include for-size(small) {
+            width: $full-width;
+        }
+
         & img {
-            width: 100%;
-            
+            width: $full-width;
         }
     }
 }
