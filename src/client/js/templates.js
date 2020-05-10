@@ -139,21 +139,19 @@ function createArticleBody(article) {
             <div class="article-overview">
                 <div class="title">${article.title}</div>
                 <div class="article-source">
-                    <div class="source">${article.source}</div>
-                    <div class="author">${article.author}</div>
+                    <div class="source">${article.source || ''}</div>
+                    <div class="author">${article.author || ''}</div>
                 </div>
             </div>
             <div class="article-details">
                 <div class="article-description">
                     ${article.description}
                 </div>
-                <div class="article-content">
-                    ${article.content}
-                </div>
             </div>
         </div>
-        <div class="article-img">
-            <img src="${article.image}"/>
-        </div>
+        ${article.image ? 
+            `<div class="article-img">
+                <img src="${article.image}"/>
+            </div>` : ``}
     `;
 }

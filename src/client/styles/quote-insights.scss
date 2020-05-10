@@ -3,11 +3,9 @@
 
 $quote-insights-border: 2px solid $main-blue;
 
-$quote-desktop-width: 85%;
+$quote-desktop-width: 90%;
 $quote-mobile-width: 100%;
-$quote-max-width: 750px;
-
-$quote-news-height: 50%;
+$quote-max-width: 850px;
 
 .insights {
     @include absolute-overlay(
@@ -18,8 +16,7 @@ $quote-news-height: 50%;
     @include flex-center();
 
     & .quote-insights {
-        display: flex;
-        flex-direction: column;
+        @include flex-column($alignment: stretch);
 
         background: $light-color;
         border: $quote-insights-border;
@@ -60,12 +57,24 @@ $quote-news-height: 50%;
         }
 
         & .quote-details {
-            display: flex;
+            @include flex-column($alignment: flex-start);
+
+            & .quote-panel {
+                display: flex;
+                flex-shrink: 0;
+
+                & div {
+                    padding: $small-padding;
+                    color: $light-color;
+                    background-color: $accents-blue;
+
+                    &:hover, &.selected {
+                        background-color: $main-blue;
+                    }
+                }
+            }
 
             & .quote-news {
-                @include card-margin();
-
-                height: $quote-news-height;
                 overflow-y: scroll;
             }
         }

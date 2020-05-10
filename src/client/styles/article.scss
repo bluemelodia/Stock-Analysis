@@ -1,8 +1,8 @@
 @import './app.scss';
 
 $article-title-max-width: 450px;
-$article-body-width: percentage($number: 0.75);
-$article-img-width: percentage($number: 1) - $article-body-width;
+$article-body-width: 100%;
+$article-img-width: 25%;
 $article-header-border: 2px solid $accents-blue;
 
 .article {
@@ -35,7 +35,7 @@ $article-header-border: 2px solid $accents-blue;
     & .article-img {
         width: $article-img-width;
         margin: $small-margin;
-        align-self: flex-start;
+        align-self: center;
 
         & img {
             width: 100%;
