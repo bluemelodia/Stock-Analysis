@@ -6,7 +6,11 @@ $quote-insights-border: 2px solid $main-blue;
 $quote-mobile-width: $full-width;
 $quote-max-width: 850px;
 
+$quote-header-height: 60px;
+$quote-footer-height: 40px;
+
 $quote-details-height: 80%;
+$quote-details-mobile-height: 85%;
 $quote-details-max-height: 600px;
 
 .insights {
@@ -25,6 +29,7 @@ $quote-details-max-height: 600px;
         max-width: $quote-max-width;
 
         @include for-size(small) {
+            @include flex-column($alignment: stretch);
             width: $quote-mobile-width;
             height: $quote-mobile-width;
         }
@@ -33,6 +38,7 @@ $quote-details-max-height: 600px;
             @include quote-overview();
             @include for-size(small) {
                 align-items: flex-start;
+                height: $quote-header-height;
             }
 
             flex-shrink: 0;
@@ -59,6 +65,11 @@ $quote-details-max-height: 600px;
 
             height: $quote-details-height;
             max-height: $quote-details-max-height;
+
+            @include for-size(small) {
+                height: calc(100% - #{ $quote-header-height + $quote-footer-height });
+                max-height: calc(100% - #{ $quote-header-height + $quote-footer-height });
+            }
 
             & .quote-panel {
                 display: flex;
