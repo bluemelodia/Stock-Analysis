@@ -1,0 +1,18 @@
+@import './app.scss';
+
+.loader {
+    @include absolute-overlay(
+        $background: $dark-overlay-color, 
+        $z-index: $overlay-z-index + 4
+    );
+
+    & .loading-spinner {
+        @include flex-center();
+        width: $full-width;
+        height: $full-height;
+
+        & i {
+            color: $accents-gray;
+        }
+    }
+}

@@ -8,7 +8,7 @@ import {
     quoteIcon,
     searchPrompt 
 } from './templates';
-import { alertType, showAlert, showInsights } from '../index'
+import { alertType, showAlert, showLoader, hideLoader, showInsights } from '../index'
 
 const overlay = document.querySelector('.search-overlay');
 const searchInput = document.getElementById('search-input');
@@ -100,6 +100,8 @@ const getStocks = async(url = '', stockAction, stock) => {
         return;
     }
 
+    showLoader();
+
     timeOfLastRequest = currentDayAndTime();
     const response = await fetch(url);
 
@@ -131,6 +133,8 @@ const getStocks = async(url = '', stockAction, stock) => {
         }
     } catch (error) {
         showAlert(errorMessages.FAILED_REQUEST, alertType.error);
+    } finally {
+        hideLoader();
     }
 }
 

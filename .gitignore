@@ -1,2 +1,3 @@
 # API keys
 /src/server/secrets
+node_modules

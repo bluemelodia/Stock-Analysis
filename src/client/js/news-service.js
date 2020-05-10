@@ -1,4 +1,4 @@
-import { alertType, showAlert } from '../index'
+import { alertType, showAlert, showLoader, hideLoader } from '../index'
 import { advancedQuery, parseArticle } from './news-utils';
 import { currentDayAndTime } from './number-utils';
 import { createArticle, elementWithClasses } from './templates';
@@ -20,6 +20,8 @@ const errorMessages = {
 }
 
 export async function findNews(symbol, name) {
+        showLoader();
+
         const currentTime = Date.parse(currentDayAndTime());
         /* Check if a recent request was made for this symbol. */
         console.log("CACHE: ", cache);
@@ -28,6 +30,7 @@ export async function findNews(symbol, name) {
                 if (currentTime - Date.parse(cachedSymbol.lastRefresh) < fetchLimit) {
                         showAlert(errorMessages.FETCH_CACHED, alertType.info);
                         displayNews(cachedSymbol.breakingNews, cachedSymbol.allNews);
+                        hideLoader();
                         return;
                 }
         }
@@ -61,6 +64,7 @@ export async function findNews(symbol, name) {
         };
 
         displayNews(breakingNews, allNews);
+        hideLoader();
 }
 
 const getNews = async(url = '') => {
@@ -120,6 +124,4 @@ function displayNews(breakingNews, allNews) {
         newsPanel.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-// TODO: add loadmasks
-// TODO: there's an issue where the alert is shown for a very short time after being shown the first time.
 // TODO: call Aylien API

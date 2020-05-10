@@ -16,6 +16,7 @@ import {
 import './styles/app.scss';
 import './styles/alert.scss';
 import './styles/article.scss';
+import './styles/loader.scss';
 import './styles/quote-common.scss';
 import './styles/quote-insights.scss';
 import './styles/quote-search.scss';
@@ -23,6 +24,8 @@ import './styles/quote-search.scss';
 let searchButton;
 let searchInput;
 let overlay;
+
+let loader;
 
 let alertOverlay;
 let alertMessage;
@@ -53,6 +56,8 @@ function init() {
     searchButton = document.getElementById('search-button');
     searchInput = document.getElementById('search-input'); 
     overlay = document.querySelector('.search-overlay');
+
+    loader = document.querySelector('.loader');
 
     alertOverlay = document.querySelector('.alert');
     alertMessage = alertOverlay.querySelector('.alert-message');
@@ -93,6 +98,14 @@ function setupEventListeners() {
 
     newsTab.addEventListener('click', () => switchTabs(newsTab));
     sentimentTab.addEventListener('click', () => switchTabs(sentimentTab));
+}
+
+function showLoader() {
+    loader.classList.remove('hidden');
+}
+
+function hideLoader() {
+    loader.classList.add('hidden');
 }
 
 function showAlert(message, messageType) {
@@ -152,6 +165,8 @@ export {
     init,
     showAlert,
     alertType,
+    showLoader,
+    hideLoader,
     showInsights,
     dismissInsights
 };
