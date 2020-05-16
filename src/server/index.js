@@ -74,6 +74,9 @@ const newsActions = newsService.NewsActions;
 const newsEverythingURL = newsService.newsURL(newsActions.Everything);
 const newsTopHeadlines = newsService.newsURL(newsActions.TopHeadlines);
 
+/* Ayline API URLs and utils. */
+const aylienService = require('./services/aylien-service');
+
 /* Methods to provide input validation. */
 const validation = require('./utils/validation');
 
@@ -157,7 +160,7 @@ async function getNews(req, res, newsQueryType) {
     const news = await fetch(newsURL);
     try {
         const newsJSON = await news.json();
-        console.log('🗞 GET news SUCCESS -> ', newsJSON);
+        console.log('🗞 GET news SUCCESS');
 
         if (newsJSON.status !== 'ok') {
             res.send(responses.reqError(responses.errMsg.INVALID_REQUEST));
@@ -170,6 +173,36 @@ async function getNews(req, res, newsQueryType) {
     }
 }
 
+app.post('/sentiment', analyzeNews);
+async function analyzeNews(req, res) {
+    if (!req.body.doc) {
+        res.send(responses.reqError(responses.errMsg.MISSING_OR_INVALID_PARAMETERS));
+        return;
+    }
+
+    const url = aylienService.aylienURL(req.body.doc);
+    console.log('🎭 GET sentiment -> ', url);
+    const aylienData = await fetch(
+        url,
+        {
+            method: 'POST',
+            headers: aylienService.aylienHeaders
+        }
+    );
+
+    try {
+        const aylienJSON = await aylienData.json();
+        if (!aylienJSON.text && !aylienJSON.entities) {
+            throw new Error();
+        } else {
+            res.send(responses.reqSuccess(aylienJSON));
+        }
+    } catch (error) {
+        console.log('🎭 ERROR -> ', error);
+        res.send(responses.reqError(responses.errMsg.PROCESS_FAILED));
+    }
+}
+
 app.get('*', function(req, res) {
-    console.log('No other routes matched...');
+    console.log('No other routes matched...', req.params);
 });

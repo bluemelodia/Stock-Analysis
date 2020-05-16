@@ -9,7 +9,7 @@ const lastRefreshed = insights.querySelector('.last-refreshed');
 const refreshButton = insights.querySelector('.refresh-button');
 let refreshListener;
 
-const fetchLimit = 15 * 60 * 1000;
+const fetchLimit = 60 * 60 * 1000;
 
 /* Unlike with symbol search, this cache will not be cleared. */
 const cache = {};
@@ -29,7 +29,7 @@ export async function findNews(symbol, name) {
                 const cachedSymbol = cache[symbol];
                 if (currentTime - Date.parse(cachedSymbol.lastRefresh) < fetchLimit) {
                         showAlert(errorMessages.FETCH_CACHED, alertType.info);
-                        displayNews(cachedSymbol.breakingNews, cachedSymbol.allNews);
+                        displayNews(cachedSymbol.breakingNews, cachedSymbol.allNews, symbol);
                         hideLoader();
                         return;
                 }
@@ -63,7 +63,7 @@ export async function findNews(symbol, name) {
                 allNews: allNews
         };
 
-        displayNews(breakingNews, allNews);
+        displayNews(breakingNews, allNews, symbol);
         hideLoader();
 }
 
@@ -92,7 +92,32 @@ const getNews = async(url = '') => {
         }
 }
 
-function displayNews(breakingNews, allNews) {
+const getSentiment = async(url = '', symbol) => {
+        const requestOptions = {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ doc: url }) // body data type must match "Content-Type" header
+            };
+        const response = await fetch('http://localhost:3000/sentiment', requestOptions);
+        console.log("RESPONSE: ", response);
+
+        try {
+            const sentimentData = await response.json();
+            console.log("SENTIMENT DATA… ", sentimentData);
+            if (sentimentData.statusCode !== 0) {
+                showAlert(errorMessages.FAILED_REQUEST, alertType.error);
+                return;
+            }
+            
+            } catch (error) {
+                    console.log("ERROR: ", error);
+            }
+}
+
+function displayNews(breakingNews, allNews, symbol) {
         newsPanel.innerHTML = '';
 
         const newsContainer = elementWithClasses('div', ['news-container']);
@@ -106,6 +131,9 @@ function displayNews(breakingNews, allNews) {
                                 const breakingArticle = createArticle(article, true);
                                 newsContainer.appendChild(breakingArticle);
                         }
+
+                        /* Only get Aylien analysis on breaking news. */
+                        getSentiment(article.url, symbol);
                 });
         }  
 
@@ -123,5 +151,3 @@ function displayNews(breakingNews, allNews) {
         /* Scroll back to the top. */
         newsPanel.scrollTo({top: 0, behavior: 'smooth'});
 }
-
-// TODO: call Aylien API
