@@ -52,3 +52,12 @@ function containsPatterns(query, patterns) {
     }
     return false;
 }
+
+export function createSentiment(sentiment) {
+    return {
+        links: sentiment.links,
+        mentions: sentiment.mentions,
+        sentiment: sentiment.overall_sentiment,
+        type: sentiment.type
+    };
+}

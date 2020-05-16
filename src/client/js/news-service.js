@@ -1,10 +1,11 @@
 import { alertType, showAlert, showLoader, hideLoader } from '../index'
-import { advancedQuery, parseArticle } from './news-utils';
+import { advancedQuery, createSentiment, parseArticle } from './news-utils';
 import { currentDayAndTime } from './number-utils';
 import { createArticle, elementWithClasses } from './templates';
 
 const insights = document.querySelector('.quote-insights');
 const newsPanel = insights.querySelector('.quote-news');
+const sentimentPanel = insights.querySelector('.quote-sentiment');
 const lastRefreshed = insights.querySelector('.last-refreshed');
 const refreshButton = insights.querySelector('.refresh-button');
 let refreshListener;
@@ -56,12 +57,25 @@ export async function findNews(symbol, name) {
         refreshListener = findNews.bind(this, symbol, name, lastRefreshedDate);
         refreshButton.addEventListener('click', refreshListener);
 
+        /* Only get Aylien analysis on breaking news. */
+        let sentiments = [];
+        if (breakingNews && breakingNews.news) {
+                for (let news of breakingNews.news) {
+                        const newsSentiments = await getSentiment(news.url);
+                        if (newsSentiments) {
+                                sentiments = sentiments.concat(newsSentiments);
+                        }
+                }
+        }
+
         /* Cache the symbol, updating the last refreshed date. */
         cache[symbol] = {
                 lastRefresh: lastRefreshedDate,
                 breakingNews: breakingNews,
-                allNews: allNews
+                allNews: allNews,
+                sentiments: sentiments
         };
+        console.log("CACHED: ", cache);
 
         displayNews(breakingNews, allNews, symbol);
         hideLoader();
@@ -92,7 +106,7 @@ const getNews = async(url = '') => {
         }
 }
 
-const getSentiment = async(url = '', symbol) => {
+const getSentiment = async(url = '') => {
         const requestOptions = {
                 method: 'POST',
                 credentials: 'same-origin',
@@ -102,19 +116,29 @@ const getSentiment = async(url = '', symbol) => {
                 body: JSON.stringify({ doc: url }) // body data type must match "Content-Type" header
             };
         const response = await fetch('http://localhost:3000/sentiment', requestOptions);
-        console.log("RESPONSE: ", response);
 
         try {
             const sentimentData = await response.json();
-            console.log("SENTIMENT DATA… ", sentimentData);
             if (sentimentData.statusCode !== 0) {
-                showAlert(errorMessages.FAILED_REQUEST, alertType.error);
                 return;
             }
-            
-            } catch (error) {
-                    console.log("ERROR: ", error);
-            }
+
+            let sentiments = [];
+            for (let sentiment of sentimentData.responseData.entities) {
+                if (sentiment.mentions.length > 0) {
+                        sentiments.push(createSentiment(sentiment));
+                }
+            } 
+            return sentiments;
+        }
+        catch (error) {
+                console.log("ERROR: ", error);
+                return null;
+        }
+}
+
+function displaySentiment(sentiment) {
+
 }
 
 function displayNews(breakingNews, allNews, symbol) {
@@ -131,9 +155,6 @@ function displayNews(breakingNews, allNews, symbol) {
                                 const breakingArticle = createArticle(article, true);
                                 newsContainer.appendChild(breakingArticle);
                         }
-
-                        /* Only get Aylien analysis on breaking news. */
-                        getSentiment(article.url, symbol);
                 });
         }  
 
