@@ -20,6 +20,11 @@ const errorMessages = {
         FETCH_CACHED: 'As you recently fetched insights for this security, a cached version of the data will be displayed.',
 }
 
+const emptyMessages = {
+        NO_NEWS: 'There is no recent news for this security.',
+        NO_SENTIMENTS: 'As there are no recent breaking news for this security, sentiment analyses are unavailable.'
+}
+
 export async function findNews(symbol, name) {
         showLoader();
 
@@ -31,6 +36,7 @@ export async function findNews(symbol, name) {
                 if (currentTime - Date.parse(cachedSymbol.lastRefresh) < fetchLimit) {
                         showAlert(errorMessages.FETCH_CACHED, alertType.info);
                         displayNews(cachedSymbol.breakingNews, cachedSymbol.allNews, symbol);
+                        displaySentiments(cachedSymbol.sentiments);
                         hideLoader();
                         return;
                 }
@@ -78,6 +84,7 @@ export async function findNews(symbol, name) {
         console.log("CACHED: ", cache);
 
         displayNews(breakingNews, allNews, symbol);
+        displaySentiments(sentiments);
         hideLoader();
 }
 
@@ -141,34 +148,57 @@ function displaySentiment(sentiment) {
 
 }
 
-function displayNews(breakingNews, allNews, symbol) {
+function displayNews(breakingNews, allNews) {
         newsPanel.innerHTML = '';
 
         const newsContainer = elementWithClasses('div', ['news-container']);
+        const hasBreakingNews = breakingNews && breakingNews.news;
+        const hasNews = allNews && allNews.news;
 
-        if (breakingNews && breakingNews.news) {
-                breakingNews.news.forEach(article => {
-                        /* Don't need to use the articles w/o description and 
-                         * content, as the sentiment analysis API won't be able
-                         * to get much information from it. */
-                        if (article.description || article.content) {
-                                const breakingArticle = createArticle(article, true);
-                                newsContainer.appendChild(breakingArticle);
-                        }
-                });
-        }  
-
-        if (allNews && allNews.news) {
-                allNews.news.forEach(article => {
-                        if (article.description || article.content) {
-                                const normalArticle = createArticle(article);
-                                newsContainer.appendChild(normalArticle);
-                        }
-                });
+        if (!hasBreakingNews && !hasNews) {
+                newsContainer.appendChild(emptyMessages.NO_NEWS);
+        } else {
+                if (hasBreakingNews) {
+                        breakingNews.news.forEach(article => {
+                                /* Don't need to use the articles w/o description and 
+                                 * content, as the sentiment analysis API won't be able
+                                 * to get much information from it. */
+                                if (article.description || article.content) {
+                                        const breakingArticle = createArticle(article, true);
+                                        newsContainer.appendChild(breakingArticle);
+                                }
+                        });
+                }  
+        
+                if (hasNews) {
+                        allNews.news.forEach(article => {
+                                if (article.description || article.content) {
+                                        const normalArticle = createArticle(article);
+                                        newsContainer.appendChild(normalArticle);
+                                }
+                        });
+                }
         }
 
         newsPanel.appendChild(newsContainer);
 
         /* Scroll back to the top. */
         newsPanel.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function displaySentiments(sentiments) {
+        sentimentPanel.innerHTML = '';
+
+        const sentimentsContainer = elementWithClasses('div', ['sentiments-container']);
+
+        if (!sentiments || sentiments.length < 1) {
+                sentimentsContainer.appendChild(emptyMessages.NO_NEWS);
+        } else {
+                
+        }
+
+        sentimentPanel.appendChild(sentimentsContainer);
+
+        /* Scroll back to the top. */
+        sentimentPanel.scrollTo({top: 0, behavior: 'smooth'});
 }
