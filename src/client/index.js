@@ -123,7 +123,6 @@ function showAlert(message, messageType) {
     }
 
     setTimeout(() => {
-        console.log("DISMISS ALERT");
         dismissAlert();
     }, alertTimeout);
 }

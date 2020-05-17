@@ -69,24 +69,22 @@ function setResultsContent(content) {
 }
 
 export const fetchSymbols = async() => {
-    showLoader();
     const stocks = await fetch(`http://localhost:3000/loadSymbols`);
     try {
         const watchedStocks = await stocks.json();
-        console.log("WATCHED STOCKS: ", watchedStocks);
         if (watchedStocks.statusCode === 0 && watchedStocks.responseData) {
-            console.log("My stocks: ", watchedStocks.responseData);
-
             let iteration = 1;
             const watchData = watchedStocks.responseData
+            showAlert("Fetching cached stocks.", alertType.info);
+
             for (var stock in watchData) {
                 console.log("Getting cached stock: ", stock);
-                showAlert(`Fetching watched stock: ${stock}`, alertType.info);
                 setTimeout(
                     getStocks.bind(null,
                     `http://localhost:3000/quote/${stock}`, 
                     stockOps.globalQuote,
-                    watchData[stock]),
+                    watchData[stock], 
+                    true),
                     requestLimit * iteration
                 );
                 iteration += 1;
@@ -94,8 +92,6 @@ export const fetchSymbols = async() => {
         }
     } catch(error) {
         console.log("ERROR: ", error);
-    } finally {
-        hideLoader();
     }
 }
 
@@ -128,7 +124,7 @@ function displayMatchingStocks(stocks) {
 }
 
 /* Handle ticker and stock API calls. */
-const getStocks = async(url = '', stockAction, stock) => {
+const getStocks = async(url = '', stockAction, stock, isServerFetch = false) => {
     const currentTime = Date.parse(currentDayAndTime());
 
     if (timeOfLastRequest && currentTime - Date.parse(timeOfLastRequest) < requestLimit) {
@@ -143,7 +139,6 @@ const getStocks = async(url = '', stockAction, stock) => {
 
     try {
         const stockData = await response.json();
-        console.log("SERVER RETURNED: ", stockData);
         
         if (stockData.statusCode !== 0) {
             throw stockData.errorMsg;
@@ -162,13 +157,15 @@ const getStocks = async(url = '', stockAction, stock) => {
             }
             displayMatchingStocks(stocks);
         } else {
-            console.log("STOCK DATA: ", stockData);
             let quote = parseSymbol(
                 stockData.responseData['Global Quote'], 
                 stockAction,
                 stock);
-            console.log("STOCK DATA CLEAN: ", quote);
             displayQuote(quote);
+
+            if (isServerFetch) {
+                setFetchedQuoteToWatch(quote);
+            }
         }
     } catch (error) {
         console.log("ERROR: ", error);
@@ -200,8 +197,6 @@ function fetchQuote(stock) {
 function displayQuote(quote) {
     const lastRefreshedDate = currentDayAndTime();
     const refreshHandler = fetchDelayedQuote.bind(this, lastRefreshedDate, quote);
-
-    console.log("DISPLAYING QUOTE: ", quote);
 
     if (!displayedStocks[quote.symbol]) {
         displayedStocks.symbols.push(quote.symbol);
@@ -263,6 +258,16 @@ function updateQuoteContainer(quoteContainer, quote, lastRefreshedDate, refreshH
  * the next user session. */
 function isWatchedQuote(symbol) {
     return bookmarkedStocks[symbol];
+}
+
+/* If fetching the quote from the server, automatically add it to the list of 
+ * bookmarked stocks and set the configuration to watched. */
+function setFetchedQuoteToWatch(quote) {
+    const symbol = quote.symbol;
+    if (configureWatchedCard(symbol)) {
+        bookmarkedStocks.symbols.push(symbol);
+        bookmarkedStocks[symbol] = quote;
+    }
 }
 
 function watchQuote(quote) {

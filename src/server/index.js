@@ -145,7 +145,6 @@ async function addSymbol(req, res) {
 
     console.log('💹 POST addSymbol -> ', symbol);
     watchedStocks[symbol.symbol] = symbol;
-    console.log("WATCHED STOCKS: ", watchedStocks);
     res.send(responses.reqSuccess());
 }
 

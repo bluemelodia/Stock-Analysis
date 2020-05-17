@@ -15,7 +15,6 @@ function cleanKeys(rawData) {
 export function parseSymbol(rawQuote, stockAction, symbolData) {
     let cleanedData = cleanKeys(rawQuote);
     let cleanedSymbol = stockAction === stockOps.tickerSearch ? cleanedData : symbolData;
-    console.log("CLEANED: ", cleanedSymbol);
     let symbol = {
         symbol : cleanedSymbol.symbol,
         name : cleanedSymbol.name,
@@ -25,7 +24,6 @@ export function parseSymbol(rawQuote, stockAction, symbolData) {
     };
 
     if (stockAction === stockOps.tickerSearch) {
-        console.log("SYMBIOL ONLY");
         return symbol;
     } else {
         let quote = {
@@ -39,7 +37,6 @@ export function parseSymbol(rawQuote, stockAction, symbolData) {
             volume: cleanedData.volume
         }
         quote = Object.assign({}, quote, symbol);
-        console.log("OUR QUOTE, ", quote);
         return quote;
     }
 }
