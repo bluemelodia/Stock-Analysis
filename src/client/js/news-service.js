@@ -34,7 +34,6 @@ export async function findNews(symbol, name) {
 
         const currentTime = Date.parse(currentDayAndTime());
         /* Check if a recent request was made for this symbol. */
-        console.log("CACHE: ", cache);
         if (cache[symbol]) {
                 const cachedSymbol = cache[symbol];
                 if (currentTime - Date.parse(cachedSymbol.lastRefresh) < fetchLimit) {
@@ -51,9 +50,6 @@ export async function findNews(symbol, name) {
 
         const breakingNews = await getNews(`http://localhost:3000/breakingNews/${simpleQuery}`);
         const allNews = await getNews(`http://localhost:3000/allNews/${everythingQuery}`);
-
-        console.log("Breaking news: ", breakingNews);
-        console.log("All news: ", allNews);
 
         /* Refresh the footer. */
         const lastRefreshedDate = currentDayAndTime();

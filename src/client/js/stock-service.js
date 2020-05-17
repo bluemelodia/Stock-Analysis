@@ -83,11 +83,10 @@ export const fetchSymbols = async() => {
                 console.log("Getting cached stock: ", stock);
                 showAlert(`Fetching watched stock: ${stock}`, alertType.info);
                 setTimeout(
-                    () => {
-                        getStocks(`http://localhost:3000/quote/${stock}`, 
-                            stockOps.globalQuote,
-                            watchData[stock]);
-                    },
+                    getStocks.bind(null,
+                    `http://localhost:3000/quote/${stock}`, 
+                    stockOps.globalQuote,
+                    watchData[stock]),
                     requestLimit * iteration
                 );
                 iteration += 1;
