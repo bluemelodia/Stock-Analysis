@@ -5,10 +5,17 @@
     @include card-padding();
     @include card-margin();
 
+    padding-right: $small-padding;
+
+    & .sentiment-entity, & .sentiment-type {
+        width: 45%;
+        text-align: left;
+    }
+
     & .sentiment-polarity {
         @include flex-row($alignment: space-between);
         
-        display: flex;
+        align-items: center;
         width: 10%;
 
         & .polarity {

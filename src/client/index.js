@@ -66,8 +66,8 @@ function init() {
     insightsSymbol = insightsOverlay.querySelector('.symbol');
     insightsName = insightsOverlay.querySelector('.name');
 
-    newsTab = insightsOverlay.querySelector('.news');
-    sentimentTab = insightsOverlay.querySelector('.sentiment');
+    newsTab = insightsOverlay.querySelector('.news-tab');
+    sentimentTab = insightsOverlay.querySelector('.sentiment-tab');
     newsPanel = insightsOverlay.querySelector('.quote-news');
     sentimentPanel = insightsOverlay.querySelector('.quote-sentiment');
     tabs.push({ tab: newsTab, panel: newsPanel });

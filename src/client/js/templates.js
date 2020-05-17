@@ -192,9 +192,10 @@ function createSentimentCell(sentiment) {
 
     return `
         <div class="sentiment-entity">${sentiment.mentions[0].text}</div>
+        <div class="sentiment-type">${sentiment.type}</div>
         <div class="sentiment-polarity">
-            <div class="sentiment-confidence">${confidence}</div>
             ${ polarityCell(polarity) }
+            <div class="sentiment-confidence">${confidence}</div>
         </div>
     `;
 }
