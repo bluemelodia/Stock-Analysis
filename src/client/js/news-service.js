@@ -28,6 +28,10 @@ const emptyMessages = {
 export async function findNews(symbol, name) {
         showLoader();
 
+        /* Empty everything out. */
+        newsPanel.innerHTML = '';
+        sentimentPanel.innerHTML = '';
+
         const currentTime = Date.parse(currentDayAndTime());
         /* Check if a recent request was made for this symbol. */
         console.log("CACHE: ", cache);
