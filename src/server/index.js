@@ -63,7 +63,7 @@ const server = app.listen(port, () => {
 }) 
 
 /* Local storage of watched stocks. */
-let watchedStocks = [];
+let watchedStocks = {};
 
 /* Alpha Vantage URLs and utils. */
 const aVService = require('./services/av-service');
@@ -129,8 +129,8 @@ async function getStocks(req, res, searchType) {
 
 app.get('/loadSymbols', loadSymbols)
 async function loadSymbols(req, res) {
-    console.log('💹 GET loadSymbols -> ', symbol);
-    res.send(responses.reqSuccess(watchedStocks.json()));
+    console.log('💹 GET loadSymbols');
+    res.send(responses.reqSuccess(watchedStocks));
 }
 
 /* POST symbol to add to portfolio. */
@@ -144,7 +144,7 @@ async function addSymbol(req, res) {
     const symbol = req.body.symbol;
 
     console.log('💹 POST addSymbol -> ', symbol);
-    watchedStocks.push(symbol);
+    watchedStocks[symbol.symbol] = symbol;
     res.send(responses.reqSuccess());
 }
 
@@ -158,9 +158,7 @@ async function removeSymbol(req, res) {
     const symbol = req.body.symbol;
 
     console.log('💹 DELETE removeSymbol -> ', symbol);
-    watchedStocks = watchedStocks.filter(stock => {
-        stock !== symbol
-    });
+    delete watchedStocks.symbol;
     res.send(responses.reqSuccess());
 }
 

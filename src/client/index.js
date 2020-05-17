@@ -1,4 +1,5 @@
 import { 
+    fetchSymbols,
     findMatchingStocks, 
     hideSearchOverlay, 
     showSearchOverlay,
@@ -74,6 +75,7 @@ function init() {
     tabs.push({ tab: sentimentTab, panel: sentimentPanel });
 
     setupEventListeners();
+    fetchSymbols();
 }
 
 function setupEventListeners() {

@@ -68,6 +68,38 @@ function setResultsContent(content) {
     searchResults.appendChild(resultsParent);
 }
 
+export const fetchSymbols = async() => {
+    showLoader();
+    const stocks = await fetch(`http://localhost:3000/loadSymbols`);
+    try {
+        const watchedStocks = await stocks.json();
+        console.log("WATCHED STOCKS: ", watchedStocks);
+        if (watchedStocks.statusCode === 0 && watchedStocks.responseData) {
+            console.log("My stocks: ", watchedStocks.responseData);
+
+            let iteration = 1;
+            const watchData = watchedStocks.responseData
+            for (var stock in watchData) {
+                console.log("Getting cached stock: ", stock);
+                showAlert(`Fetching watched stock: ${stock}`, alertType.info);
+                setTimeout(
+                    () => {
+                        getStocks(`http://localhost:3000/quote/${stock}`, 
+                            stockOps.globalQuote,
+                            watchData[stock]);
+                    },
+                    requestLimit * iteration
+                );
+                iteration += 1;
+            }
+        }
+    } catch(error) {
+        console.log("ERROR: ", error);
+    } finally {
+        hideLoader();
+    }
+}
+
 export function findMatchingStocks(query) {
     const userQuery = query;
     if (userQuery && userQuery.length > 0) {
@@ -112,6 +144,7 @@ const getStocks = async(url = '', stockAction, stock) => {
 
     try {
         const stockData = await response.json();
+        console.log("SERVER RETURNED: ", stockData);
         
         if (stockData.statusCode !== 0) {
             throw stockData.errorMsg;
@@ -130,13 +163,16 @@ const getStocks = async(url = '', stockAction, stock) => {
             }
             displayMatchingStocks(stocks);
         } else {
+            console.log("STOCK DATA: ", stockData);
             let quote = parseSymbol(
                 stockData.responseData['Global Quote'], 
                 stockAction,
                 stock);
+            console.log("STOCK DATA CLEAN: ", quote);
             displayQuote(quote);
         }
     } catch (error) {
+        console.log("ERROR: ", error);
         showAlert(errorMessages.FAILED_REQUEST, alertType.error);
     } finally {
         hideLoader();
@@ -165,6 +201,8 @@ function fetchQuote(stock) {
 function displayQuote(quote) {
     const lastRefreshedDate = currentDayAndTime();
     const refreshHandler = fetchDelayedQuote.bind(this, lastRefreshedDate, quote);
+
+    console.log("DISPLAYING QUOTE: ", quote);
 
     if (!displayedStocks[quote.symbol]) {
         displayedStocks.symbols.push(quote.symbol);
@@ -235,7 +273,7 @@ function watchQuote(quote) {
             bookmarkedStocks.symbols.push(symbol);
             bookmarkedStocks[symbol] = quote;
             showAlert(`Added ${symbol} to watch list.`, alertType.success);
-            toggleBookmark(symbol, bookmarkOperation.POST);
+            toggleBookmark(symbol, bookmarkOperation.POST, bookmarkedStocks[symbol]);
         } else {
             showAlert(
                 `We were unable to add ${symbol} to your watch list. Please try again later.`, 
@@ -303,29 +341,28 @@ function configureUnwatchedCard(symbol) {
     }
 }
 
-function toggleBookmark(symbol, bookmarkOp = bookmarkOperation.POST) {
+function toggleBookmark(symbol, bookmarkOp = bookmarkOperation.POST, stock = null) {
     const isPost = bookmarkOp === bookmarkOperation.POST;
+    let payload = symbol;
+    if (isPost) {
+        payload = {
+            symbol : stock.symbol,
+            name : stock.name,
+            type : stock.type,
+            currency: stock.currency,
+            matchScore : stock.matchScore
+        };
+    }
+
     const requestOptions = {
         method: bookmarkOp,
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ symbol: symbol }) // body data type must match "Content-Type" header
+        body: JSON.stringify({ symbol : payload }) // body data type must match "Content-Type" header
     };
     fetch(`http://localhost:3000/${ isPost ? 'addSymbol' : 'removeSymbol' }`, requestOptions);
-}
-
-function deleteSymbol(symbol) {
-    const requestOptions = {
-        method: 'DELETE',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ symbol: symbol }) // body data type must match "Content-Type" header
-    };
-    fetch(`http://localhost:3000/addSymbol`, requestOptions);
 }
 
 function deleteQuote(quote) {
