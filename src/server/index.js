@@ -219,6 +219,7 @@ async function analyzeNews(req, res) {
 
     try {
         const aylienJSON = await aylienData.json();
+        console.log("Aylien response: ", aylienJSON);
         if (!aylienJSON.text && !aylienJSON.entities) {
             throw new Error();
         } else {

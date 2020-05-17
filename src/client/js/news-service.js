@@ -150,34 +150,37 @@ function displayNews(breakingNews, allNews) {
         const newsContainer = elementWithClasses('div', ['news-container']);
         const hasBreakingNews = breakingNews && breakingNews.news && breakingNews.news.length > 0;
         const hasNews = allNews && allNews.news && allNews.news.length > 0;
+        let addedNews = false;
 
-        if (!hasBreakingNews && !hasNews) {
+        if (hasBreakingNews) {
+                breakingNews.news.forEach(article => {
+                        /* Don't need to use the articles w/o description and 
+                        * content, as the sentiment analysis API won't be able
+                        * to get much information from it. */
+                        if (article.description || article.content) {
+                                const breakingArticle = createArticle(article, true);
+                                newsContainer.appendChild(breakingArticle);
+                                addedNews = true;
+                        }
+                });
+        }  
+        
+        if (hasNews) {
+                allNews.news.forEach(article => {
+                        if (article.description || article.content) {
+                                const normalArticle = createArticle(article);
+                                newsContainer.appendChild(normalArticle);
+                                addedNews = true;
+                        }
+                });
+        }
+
+        if (!hasBreakingNews && !hasNews && !addedNews) {
                 newsContainer.innerHTML = `
                         <div class="no-news">
                                 ${emptyMessages.NO_NEWS}
                         </div>
                 `;
-        } else {
-                if (hasBreakingNews) {
-                        breakingNews.news.forEach(article => {
-                                /* Don't need to use the articles w/o description and 
-                                 * content, as the sentiment analysis API won't be able
-                                 * to get much information from it. */
-                                if (article.description || article.content) {
-                                        const breakingArticle = createArticle(article, true);
-                                        newsContainer.appendChild(breakingArticle);
-                                }
-                        });
-                }  
-        
-                if (hasNews) {
-                        allNews.news.forEach(article => {
-                                if (article.description || article.content) {
-                                        const normalArticle = createArticle(article);
-                                        newsContainer.appendChild(normalArticle);
-                                }
-                        });
-                }
         }
 
         newsPanel.appendChild(newsContainer);
