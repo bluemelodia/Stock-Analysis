@@ -148,11 +148,15 @@ function displayNews(breakingNews, allNews) {
         newsPanel.innerHTML = '';
 
         const newsContainer = elementWithClasses('div', ['news-container']);
-        const hasBreakingNews = breakingNews && breakingNews.news;
-        const hasNews = allNews && allNews.news;
+        const hasBreakingNews = breakingNews && breakingNews.news && breakingNews.news.length > 0;
+        const hasNews = allNews && allNews.news && allNews.news.length > 0;
 
         if (!hasBreakingNews && !hasNews) {
-                newsContainer.appendChild(emptyMessages.NO_NEWS);
+                newsContainer.innerHTML = `
+                        <div class="no-news">
+                                ${emptyMessages.NO_NEWS}
+                        </div>
+                `;
         } else {
                 if (hasBreakingNews) {
                         breakingNews.news.forEach(article => {
@@ -203,7 +207,11 @@ function displaySentiments(news) {
         }
 
         if (!hasSentiments) {
-                sentimentsContainer.appendChild(emptyMessages.NO_NEWS);
+                sentimentsContainer.innerHTML = `
+                        <div class="no-sentiments">
+                                ${emptyMessages.NO_SENTIMENTS}
+                        </div>
+                `;
         }
 
         sentimentPanel.appendChild(sentimentsContainer);

@@ -18,11 +18,11 @@ Features:
 
         Detailed Insights:
                 - Users can view a news feed containing breaking and recent (past three days) news about the security. 
-                - Each security's news feed can be refreshed every 15 minutes.
+                - Users can view sentiment analyses on breaking news, which includes a list of entities referenced in each article and the article's sentiment towards these entities.
+                - Each security's news feed can be refreshed every 60 minutes.
 
         To Implement:
                 - Watched securities will be persisted across user sessions.
-                - Users can view detailed insights about each security, including a  news feed and sentiment analysis on the security.
 
 APIs used: 
         

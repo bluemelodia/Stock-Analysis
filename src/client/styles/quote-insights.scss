@@ -95,8 +95,24 @@ $quote-details-max-height: 600px;
                 }
             }
 
+            & .quote-news {
+                & .news-container {
+                    & .no-news {
+                        @include flex-center();
+                        width: $full-width;
+                        height: $full-height;
+                    }
+                }
+            }
+
             & .quote-sentiment {
                 & .sentiments-container {
+                    & .no-sentiments {
+                        @include flex-center();
+                        width: $full-width;
+                        height: $full-height;
+                    }
+
                     & .sentiment-header {
                         @include article-header-container();
 
