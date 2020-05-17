@@ -33,6 +33,11 @@ const errorMessages = {
     TOO_MANY_REFRESHES: 'You are checking on this security too often. Please wait a few minutes then try again.'
 }
 
+const bookmarkOperation = {
+    POST: 'POST',
+    DELETE: 'DELETE'
+}
+
 const displayedStocks = {
     symbols: []
 };
@@ -230,6 +235,7 @@ function watchQuote(quote) {
             bookmarkedStocks.symbols.push(symbol);
             bookmarkedStocks[symbol] = quote;
             showAlert(`Added ${symbol} to watch list.`, alertType.success);
+            toggleBookmark(symbol, bookmarkOperation.POST);
         } else {
             showAlert(
                 `We were unable to add ${symbol} to your watch list. Please try again later.`, 
@@ -267,6 +273,7 @@ function unwatchQuote(quote) {
             bookmarkedStocks.symbols = bookmarkedStocks.symbols.filter(symbol => symbol !== quote.symbol);
             delete bookmarkedStocks[symbol];
             showAlert(`Removed ${symbol} from watch list.`, alertType.success);
+            toggleBookmark(symbol, bookmarkOperation.DELETE);
         } else {
             showAlert(
                 `We were unable to remove ${symbol} from your watch list. Please try again later.`,
@@ -294,6 +301,31 @@ function configureUnwatchedCard(symbol) {
     } catch(error) {
         return false;
     }
+}
+
+function toggleBookmark(symbol, bookmarkOp = bookmarkOperation.POST) {
+    const isPost = bookmarkOp === bookmarkOperation.POST;
+    const requestOptions = {
+        method: bookmarkOp,
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ symbol: symbol }) // body data type must match "Content-Type" header
+    };
+    fetch(`http://localhost:3000/${ isPost ? 'addSymbol' : 'removeSymbol' }`, requestOptions);
+}
+
+function deleteSymbol(symbol) {
+    const requestOptions = {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ symbol: symbol }) // body data type must match "Content-Type" header
+    };
+    fetch(`http://localhost:3000/addSymbol`, requestOptions);
 }
 
 function deleteQuote(quote) {

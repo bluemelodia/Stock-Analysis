@@ -62,6 +62,9 @@ const server = app.listen(port, () => {
     console.log(`running on localhost: ${port}`);
 }) 
 
+/* Local storage of watched stocks. */
+let watchedStocks = [];
+
 /* Alpha Vantage URLs and utils. */
 const aVService = require('./services/av-service');
 const aVActions = aVService.AVActions;
@@ -124,15 +127,41 @@ async function getStocks(req, res, searchType) {
     }
 }
 
+app.get('/loadSymbols', loadSymbols)
+async function loadSymbols(req, res) {
+    console.log('💹 GET loadSymbols -> ', symbol);
+    res.send(responses.reqSuccess(watchedStocks.json()));
+}
+
 /* POST symbol to add to portfolio. */
 app.post('/addSymbol', addSymbol);
 async function addSymbol(req, res) {
+    if (!req.body.symbol) {
+        res.send(responses.reqError(responses.errMsg.MISSING_OR_INVALID_PARAMETERS));
+        return;
+    }
 
+    const symbol = req.body.symbol;
+
+    console.log('💹 POST addSymbol -> ', symbol);
+    watchedStocks.push(symbol);
+    res.send(responses.reqSuccess());
 }
 
 app.delete('/removeSymbol', removeSymbol);
 async function removeSymbol(req, res) {
+    if (!req.body.symbol) {
+        res.send(responses.reqError(responses.errMsg.MISSING_OR_INVALID_PARAMETERS));
+        return;
+    }
 
+    const symbol = req.body.symbol;
+
+    console.log('💹 DELETE removeSymbol -> ', symbol);
+    watchedStocks = watchedStocks.filter(stock => {
+        stock !== symbol
+    });
+    res.send(responses.reqSuccess());
 }
 
 /* News API - GET news related to this symbol. */

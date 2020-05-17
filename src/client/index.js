@@ -151,6 +151,7 @@ function switchTabs(selectedTab) {
         if (tab.tab === selectedTab) {
             tab.tab.classList.add('selected');
             tab.panel.classList.remove('hidden');
+            tab.panel.scrollTo({top: 0, behavior: 'smooth'});
         } else {
             tab.tab.classList.remove('selected');
             tab.panel.classList.add('hidden');
