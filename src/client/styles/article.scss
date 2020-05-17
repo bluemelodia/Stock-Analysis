@@ -46,8 +46,12 @@ $article-header-border: 2px solid $accents-blue;
 
         & .article-details {
             & .article-description {
-                & li:not(:last-child) {
-                    margin-bottom: $small-margin;
+                & ul {
+                    padding-left: $large-padding;
+
+                    & li:not(:last-child) {
+                        margin-bottom: $small-margin;
+                    }
                 }
             }
         }

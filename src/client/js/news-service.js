@@ -36,7 +36,7 @@ export async function findNews(symbol, name) {
                 if (currentTime - Date.parse(cachedSymbol.lastRefresh) < fetchLimit) {
                         showAlert(errorMessages.FETCH_CACHED, alertType.info);
                         displayNews(cachedSymbol.breakingNews, cachedSymbol.allNews, symbol);
-                        displaySentiments(cachedSymbol.sentiments);
+                        displaySentiments(cachedSymbol.breakingNews.news);
                         hideLoader();
                         return;
                 }

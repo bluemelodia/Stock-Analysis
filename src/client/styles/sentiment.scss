@@ -20,6 +20,12 @@
         }
     }
 
+    & .sentiment-entity {
+        & .title {
+            @include article-header();
+        }
+    }
+
     & .sentiment-polarity {
         @include flex-row($alignment: space-between);
         @include for-size(small) {
@@ -31,9 +37,7 @@
         width: 10%;
 
         & .polarity {
-            @include for-size(small) {
-                padding-right: $small-padding;
-            }
+            padding-right: $small-padding;
 
             &.positive {
                 color: $accents-green;

@@ -197,9 +197,18 @@ function createSentimentCell(sentiment) {
     const sen = sentiment.sentiment;
     const polarity = sen.polarity;
     const confidence = sen.confidence;
+    const links = sentiment.links;
+
+    const mentions = sentiment.mentions[0].text;
+    let sentimentHeader = mentions;
+    if (links && links.length > 0) {
+        sentimentHeader = `
+            <a href="${links[0].uri}" target="_blank" class="title">${mentions}</a>
+        `;
+    }
 
     return `
-        <div class="sentiment-entity">${sentiment.mentions[0].text}</div>
+        <div class="sentiment-entity">${sentimentHeader}</div>
         <div class="sentiment-type">${sentiment.type}</div>
         <div class="sentiment-polarity">
             ${ polarityCell(polarity) }
