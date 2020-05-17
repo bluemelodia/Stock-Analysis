@@ -27,9 +27,7 @@ $article-header-border: 2px solid $accents-blue;
             margin-bottom: $small-margin;
     
             & .title {
-                font-weight: $font-weight-bold;
-                text-decoration: none;
-                color: $main-blue;
+                @include article-header();
             }
     
             & .article-source {

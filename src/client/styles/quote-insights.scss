@@ -99,6 +99,18 @@ $quote-details-max-height: 600px;
                     display: none;
                 }
             }
+
+            & .quote-sentiment {
+                & .sentiments-container {
+                    & .sentiment-header {
+                        @include article-header-container();
+
+                        & .title {
+                            @include article-header();
+                        }
+                    }
+                }
+            }
         }
 
         & .quote-footer {

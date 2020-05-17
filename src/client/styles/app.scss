@@ -121,6 +121,21 @@ $font-weight-bold: 600;
     overflow: hidden;
 }
 
+/* Shared cell styles. */
+
+@mixin article-header() {
+    font-weight: $font-weight-bold;
+    text-decoration: none;
+    color: $main-blue;
+}
+
+@mixin article-header-container() {
+    padding-top: $large-padding;
+    padding-bottom: $large-padding;
+    padding-left: $small-padding;
+    background-color: $accents-gray;
+}
+
 /* Media queries. */
 @mixin for-size($size) {
     @if $size == small {

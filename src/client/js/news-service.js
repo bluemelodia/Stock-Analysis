@@ -1,7 +1,7 @@
 import { alertType, showAlert, showLoader, hideLoader } from '../index'
 import { advancedQuery, createSentiment, parseArticle } from './news-utils';
 import { currentDayAndTime } from './number-utils';
-import { createArticle, createSentimentBody, elementWithClasses } from './templates';
+import { createArticle, createSentimentHeader, createSentimentBody, elementWithClasses } from './templates';
 
 const insights = document.querySelector('.quote-insights');
 const newsPanel = insights.querySelector('.quote-news');
@@ -64,13 +64,14 @@ export async function findNews(symbol, name) {
         refreshButton.addEventListener('click', refreshListener);
 
         /* Only get Aylien analysis on breaking news. */
-        let sentiments = [];
         if (breakingNews && breakingNews.news) {
+                let sentiments = [];
                 for (let news of breakingNews.news) {
                         const newsSentiments = await getSentiment(news.url);
                         if (newsSentiments) {
                                 sentiments = sentiments.concat(newsSentiments);
                         }
+                        news.sentiments = sentiments;
                 }
         }
 
@@ -78,13 +79,12 @@ export async function findNews(symbol, name) {
         cache[symbol] = {
                 lastRefresh: lastRefreshedDate,
                 breakingNews: breakingNews,
-                allNews: allNews,
-                sentiments: sentiments
+                allNews: allNews
         };
         console.log("CACHED: ", cache);
 
         displayNews(breakingNews, allNews, symbol);
-        displaySentiments(sentiments);
+        displaySentiments(breakingNews.news);
         hideLoader();
 }
 
@@ -182,18 +182,28 @@ function displayNews(breakingNews, allNews) {
         newsPanel.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-function displaySentiments(sentiments) {
+function displaySentiments(news) {
         sentimentPanel.innerHTML = '';
 
         const sentimentsContainer = elementWithClasses('div', ['sentiments-container']);
+        let hasSentiments = false;
 
-        if (!sentiments || sentiments.length < 1) {
-                sentimentsContainer.appendChild(emptyMessages.NO_NEWS);
-        } else {
+        for (let breakingNews of news) {
+                const sentiments = breakingNews.sentiments; 
+                if (sentiments.length > 0) {
+                        const newsHeader = createSentimentHeader(breakingNews);
+                        sentimentsContainer.appendChild(newsHeader);
+                }
+                
                 sentiments.forEach(sentiment => {
                         const sentimentTemplate = createSentimentBody(sentiment);
                         sentimentsContainer.appendChild(sentimentTemplate);
+                        hasSentiments = true;
                 });
+        }
+
+        if (!hasSentiments) {
+                sentimentsContainer.appendChild(emptyMessages.NO_NEWS);
         }
 
         sentimentPanel.appendChild(sentimentsContainer);

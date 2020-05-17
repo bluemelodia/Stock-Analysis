@@ -160,6 +160,14 @@ function createArticleBody(article) {
     `;
 }
 
+export function createSentimentHeader(article) {
+    let articleContainer = elementWithClasses('div', ['sentiment-header']);
+    articleContainer.innerHTML = `
+        <a href="${article.url}" target="_blank" class="title">${article.title}</a>
+    `;
+    return articleContainer;
+}
+
 export function createSentimentBody(sentiment) {
     let sentimentContainer = elementWithClasses('div', ['sentiment']);
     sentimentContainer.innerHTML = createSentimentCell(sentiment);
