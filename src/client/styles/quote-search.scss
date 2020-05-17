@@ -3,7 +3,6 @@
 
 /* Heights and widths. */
 $max-width: 700px;
-$card-max-width: 400px;
 
 $company-name-max-width: 250px;
 
@@ -40,6 +39,7 @@ $quote-card-border: 2px solid $search-bar-blue;
 @mixin search-focus {
     outline: none;
     border: $search-focus-blue-border;
+    border-bottom: none;
 }
 
 /* Cross-browser support for calculated max-height. */

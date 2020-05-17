@@ -16,6 +16,7 @@ import './styles/loader.scss';
 import './styles/quote-common.scss';
 import './styles/quote-insights.scss';
 import './styles/quote-search.scss';
+import './styles/sentiment.scss';
 
 let searchButton;
 let searchInput;
@@ -131,11 +132,12 @@ function dismissAlert() {
 }
 
 function showInsights(symbol, name) {
+    findNews(symbol, name);
+    switchTabs(newsTab);
+
     insightsOverlay.classList.remove('hidden');
     insightsSymbol.innerHTML = symbol;
     insightsName.innerHTML = name;
-
-    findNews(symbol, name);
 }
 
 function dismissInsights() {

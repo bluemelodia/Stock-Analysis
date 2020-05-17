@@ -29,6 +29,7 @@ $accents-red: #ff7675;
 /* Widths. */
 $full-width: 100%;
 $full-height: 100%;
+$card-max-width: 400px;
 
 * {
     font-family: 'Lato', sans-serif;
@@ -98,7 +99,7 @@ $font-weight-bold: 600;
 
 @mixin card {
     margin: $small-margin;
-    border: $quote-card-border;
+    border: 2px solid $main-blue;
     width: $full-width;
     max-width: $card-max-width;
 }

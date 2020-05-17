@@ -1,7 +1,7 @@
 import { alertType, showAlert, showLoader, hideLoader } from '../index'
 import { advancedQuery, createSentiment, parseArticle } from './news-utils';
 import { currentDayAndTime } from './number-utils';
-import { createArticle, elementWithClasses } from './templates';
+import { createArticle, createSentimentBody, elementWithClasses } from './templates';
 
 const insights = document.querySelector('.quote-insights');
 const newsPanel = insights.querySelector('.quote-news');
@@ -144,10 +144,6 @@ const getSentiment = async(url = '') => {
         }
 }
 
-function displaySentiment(sentiment) {
-
-}
-
 function displayNews(breakingNews, allNews) {
         newsPanel.innerHTML = '';
 
@@ -194,7 +190,10 @@ function displaySentiments(sentiments) {
         if (!sentiments || sentiments.length < 1) {
                 sentimentsContainer.appendChild(emptyMessages.NO_NEWS);
         } else {
-                
+                sentiments.forEach(sentiment => {
+                        const sentimentTemplate = createSentimentBody(sentiment);
+                        sentimentsContainer.appendChild(sentimentTemplate);
+                });
         }
 
         sentimentPanel.appendChild(sentimentsContainer);

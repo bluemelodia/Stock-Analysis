@@ -1,0 +1,28 @@
+@import './app.scss';
+
+.sentiment {
+    @include flex-row($alignment: space-between);
+    @include card-padding();
+    @include card-margin();
+
+    & .sentiment-polarity {
+        @include flex-row($alignment: space-between);
+        
+        display: flex;
+        width: 10%;
+
+        & .polarity {
+            &.positive {
+                color: $accents-green;
+            }
+
+            &.neutral {
+                color: $accents-orange;
+            }
+
+            &.negative {
+                color: $accents-red;
+            }
+        }
+    }
+}

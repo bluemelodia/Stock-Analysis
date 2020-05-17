@@ -24,6 +24,10 @@ const unwatchIcon = `<i class="fa fa-eye-slash" style="font-size:24px"></i>`;
 const analysisIcon = `<i class="fa fa-line-chart" style="font-size:24px"></i>`;
 const deleteIcon = `<i class="fa fa-trash" style="font-size:24px"></i>`;
 
+const smileIcon = `<i class="fa fa-smile-o" style="font-size:24px"></i>`;
+const mehIcon = `<i class="fa fa-meh-o" style="font-size:24px"></i>`;
+const frownIcon = `<i class="fa fa-frown-o" style="font-size:24px"></i>`;
+
 export function elementWithClasses(element = 'div', classes = []) {
     let div = document.createElement(element);
     classes.forEach(classToAdd => {
@@ -153,5 +157,44 @@ function createArticleBody(article) {
             `<div class="article-img">
                 <img src="${article.image}"/>
             </div>` : ``}
+    `;
+}
+
+export function createSentimentBody(sentiment) {
+    let sentimentContainer = elementWithClasses('div', ['sentiment']);
+    sentimentContainer.innerHTML = createSentimentCell(sentiment);
+
+    return sentimentContainer;
+}
+
+function polarityCell(polarity) {
+    let polarityIcon = smileIcon;
+    let polarityClass = 'positive';
+    if (polarity === 'neutral') {
+        polarityIcon = mehIcon;
+        polarityClass = 'neutral';
+    } else if (polarity === 'negative') {
+        polarityIcon = frownIcon;
+        polarityClass = 'negative';
+    }
+
+    return `
+        <div class='polarity ${polarityClass}'>
+            ${polarityIcon}
+        </div>
+    `;
+}
+
+function createSentimentCell(sentiment) {
+    const sen = sentiment.sentiment;
+    const polarity = sen.polarity;
+    const confidence = sen.confidence;
+
+    return `
+        <div class="sentiment-entity">${sentiment.mentions[0].text}</div>
+        <div class="sentiment-polarity">
+            <div class="sentiment-confidence">${confidence}</div>
+            ${ polarityCell(polarity) }
+        </div>
     `;
 }

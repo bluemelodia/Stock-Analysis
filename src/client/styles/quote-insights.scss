@@ -4,7 +4,7 @@
 $quote-insights-border: 2px solid $main-blue;
 
 $quote-mobile-width: $full-width;
-$quote-max-width: 850px;
+$quote-width: 850px;
 
 $quote-header-height: 60px;
 $quote-footer-height: 40px;
@@ -26,7 +26,7 @@ $quote-details-max-height: 600px;
         border: $quote-insights-border;
         padding: $large-padding;
 
-        max-width: $quote-max-width;
+        width: $quote-width;
 
         @include for-size(small) {
             @include flex-column($alignment: stretch);
@@ -86,20 +86,15 @@ $quote-details-max-height: 600px;
                 }
             }
 
-            & .quote-news {
+            & .quote-news, & .quote-sentiment {
                 overflow-y: scroll;
+                width: $full-width;
 
                 /* Avoid content going right up against the scrollbar. */
                 @include for-size(small) {
                     padding-right: $large-padding;
                 }
 
-                &.hidden { 
-                    display: none;
-                }
-            }
-
-            & .quote-sentiment {
                 &.hidden { 
                     display: none;
                 }
