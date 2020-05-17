@@ -20,6 +20,11 @@ $article-header-border: 2px solid $accents-blue;
         width: $article-body-width;
         margin: $small-margin;
 
+        /* Avoid content going right up against the scrollbar. */
+        @include for-size(small) {
+            padding-right: $large-padding;
+        }
+
         & .article-overview {
             @include card-padding();
     

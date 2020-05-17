@@ -90,11 +90,6 @@ $quote-details-max-height: 600px;
                 overflow-y: scroll;
                 width: $full-width;
 
-                /* Avoid content going right up against the scrollbar. */
-                @include for-size(small) {
-                    padding-right: $large-padding;
-                }
-
                 &.hidden { 
                     display: none;
                 }
