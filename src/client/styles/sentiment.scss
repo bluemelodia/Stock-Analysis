@@ -5,20 +5,36 @@
     @include card-padding();
     @include card-margin();
 
+    @include for-size(small) {
+        flex-direction: column;
+    }
+
     padding-right: $small-padding;
 
     & .sentiment-entity, & .sentiment-type {
         width: 45%;
         text-align: left;
+
+        @include for-size(small) {
+            width: $full-width;
+        }
     }
 
     & .sentiment-polarity {
         @include flex-row($alignment: space-between);
-        
+        @include for-size(small) {
+            width: $full-width;
+            justify-content: flex-end;
+        }
+
         align-items: center;
         width: 10%;
 
         & .polarity {
+            @include for-size(small) {
+                padding-right: $small-padding;
+            }
+
             &.positive {
                 color: $accents-green;
             }
